@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{49A1BBF1-3ACF-48D8-B0A5-2A5E5FFE37C6}|SPDPBWeb\\SPDPBWeb.csproj|c:\\users\\sudar\\onedrive\\documents\\sudarshan\\spdst\\spdbp\\spdpbweb\\spdpbweb\\home1.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{49A1BBF1-3ACF-48D8-B0A5-2A5E5FFE37C6}|SPDPBWeb\\SPDPBWeb.csproj|solutionrelative:spdpbweb\\home1.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49A1BBF1-3ACF-48D8-B0A5-2A5E5FFE37C6}|SPDPBWeb\\SPDPBWeb.csproj|c:\\users\\sudar\\onedrive\\documents\\sudarshan\\spdst\\spdbp\\spdpbweb\\spdpbweb\\templelayout.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{49A1BBF1-3ACF-48D8-B0A5-2A5E5FFE37C6}|SPDPBWeb\\SPDPBWeb.csproj|solutionrelative:spdpbweb\\templelayout.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{49A1BBF1-3ACF-48D8-B0A5-2A5E5FFE37C6}|SPDPBWeb\\SPDPBWeb.csproj|c:\\users\\sudar\\onedrive\\documents\\sudarshan\\spdst\\spdbp\\spdpbweb\\spdpbweb\\nav.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{49A1BBF1-3ACF-48D8-B0A5-2A5E5FFE37C6}|SPDPBWeb\\SPDPBWeb.csproj|solutionrelative:spdpbweb\\nav.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "nav.html",
+              "DocumentMoniker": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\SPDPBWeb\\nav.html",
+              "RelativeDocumentMoniker": "SPDPBWeb\\nav.html",
+              "ToolTip": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\SPDPBWeb\\nav.html",
+              "RelativeToolTip": "SPDPBWeb\\nav.html",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2024-07-22T14:26:05.628Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "TempleLayout.html",
+              "DocumentMoniker": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\SPDPBWeb\\TempleLayout.html",
+              "RelativeDocumentMoniker": "SPDPBWeb\\TempleLayout.html",
+              "ToolTip": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\SPDPBWeb\\TempleLayout.html",
+              "RelativeToolTip": "SPDPBWeb\\TempleLayout.html",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2024-07-22T14:10:45.496Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "home1.html",
+              "DocumentMoniker": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\SPDPBWeb\\home1.html",
+              "RelativeDocumentMoniker": "SPDPBWeb\\home1.html",
+              "ToolTip": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\SPDPBWeb\\home1.html",
+              "RelativeToolTip": "SPDPBWeb\\home1.html",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAABfAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2024-07-22T14:10:26.55Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
