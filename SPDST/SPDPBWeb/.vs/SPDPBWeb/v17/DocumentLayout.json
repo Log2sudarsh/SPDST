@@ -1,18 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\",
+  "WorkspaceRootPath": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDSTApp\\SPDPBWeb\\SPDPBWeb\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{49A1BBF1-3ACF-48D8-B0A5-2A5E5FFE37C6}|SPDPBWeb\\SPDPBWeb.csproj|c:\\users\\sudar\\onedrive\\documents\\sudarshan\\spdst\\spdbp\\spdpbweb\\spdpbweb\\home1.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{49A1BBF1-3ACF-48D8-B0A5-2A5E5FFE37C6}|SPDPBWeb\\SPDPBWeb.csproj|solutionrelative:spdpbweb\\home1.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{04346AC0-FF60-4F92-9C48-A91EA88EAE14}|SPDPBWeb\\SPDPBWeb.csproj|c:\\users\\sudar\\onedrive\\documents\\sudarshan\\spdstapp\\spdpbweb\\spdpbweb\\spdpbweb\\wwwroot\\js\\donations-index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{04346AC0-FF60-4F92-9C48-A91EA88EAE14}|SPDPBWeb\\SPDPBWeb.csproj|solutionrelative:spdpbweb\\wwwroot\\js\\donations-index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{49A1BBF1-3ACF-48D8-B0A5-2A5E5FFE37C6}|SPDPBWeb\\SPDPBWeb.csproj|c:\\users\\sudar\\onedrive\\documents\\sudarshan\\spdst\\spdbp\\spdpbweb\\spdpbweb\\templelayout.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{49A1BBF1-3ACF-48D8-B0A5-2A5E5FFE37C6}|SPDPBWeb\\SPDPBWeb.csproj|solutionrelative:spdpbweb\\templelayout.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{04346AC0-FF60-4F92-9C48-A91EA88EAE14}|SPDPBWeb\\SPDPBWeb.csproj|c:\\users\\sudar\\onedrive\\documents\\sudarshan\\spdstapp\\spdpbweb\\spdpbweb\\spdpbweb\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{04346AC0-FF60-4F92-9C48-A91EA88EAE14}|SPDPBWeb\\SPDPBWeb.csproj|solutionrelative:spdpbweb\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{49A1BBF1-3ACF-48D8-B0A5-2A5E5FFE37C6}|SPDPBWeb\\SPDPBWeb.csproj|c:\\users\\sudar\\onedrive\\documents\\sudarshan\\spdst\\spdbp\\spdpbweb\\spdpbweb\\nav.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{49A1BBF1-3ACF-48D8-B0A5-2A5E5FFE37C6}|SPDPBWeb\\SPDPBWeb.csproj|solutionrelative:spdpbweb\\nav.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{04346AC0-FF60-4F92-9C48-A91EA88EAE14}|SPDPBWeb\\SPDPBWeb.csproj|c:\\users\\sudar\\onedrive\\documents\\sudarshan\\spdstapp\\spdpbweb\\spdpbweb\\spdpbweb\\wwwroot\\css\\dnoation_index.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{04346AC0-FF60-4F92-9C48-A91EA88EAE14}|SPDPBWeb\\SPDPBWeb.csproj|solutionrelative:spdpbweb\\wwwroot\\css\\dnoation_index.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{04346AC0-FF60-4F92-9C48-A91EA88EAE14}|SPDPBWeb\\SPDPBWeb.csproj|c:\\users\\sudar\\onedrive\\documents\\sudarshan\\spdstapp\\spdpbweb\\spdpbweb\\spdpbweb\\controllers\\donationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{04346AC0-FF60-4F92-9C48-A91EA88EAE14}|SPDPBWeb\\SPDPBWeb.csproj|solutionrelative:spdpbweb\\controllers\\donationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{04346AC0-FF60-4F92-9C48-A91EA88EAE14}|SPDPBWeb\\SPDPBWeb.csproj|c:\\users\\sudar\\onedrive\\documents\\sudarshan\\spdstapp\\spdpbweb\\spdpbweb\\spdpbweb\\context\\donationscontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{04346AC0-FF60-4F92-9C48-A91EA88EAE14}|SPDPBWeb\\SPDPBWeb.csproj|solutionrelative:spdpbweb\\context\\donationscontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,41 +34,65 @@
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DonationsController.cs",
+              "DocumentMoniker": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDSTApp\\SPDPBWeb\\SPDPBWeb\\SPDPBWeb\\Controllers\\DonationsController.cs",
+              "RelativeDocumentMoniker": "SPDPBWeb\\Controllers\\DonationsController.cs",
+              "ToolTip": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDSTApp\\SPDPBWeb\\SPDPBWeb\\SPDPBWeb\\Controllers\\DonationsController.cs",
+              "RelativeToolTip": "SPDPBWeb\\Controllers\\DonationsController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAC8AAAA+AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-31T19:55:52.317Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DonationsContext.cs",
+              "DocumentMoniker": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDSTApp\\SPDPBWeb\\SPDPBWeb\\SPDPBWeb\\Context\\DonationsContext.cs",
+              "RelativeDocumentMoniker": "SPDPBWeb\\Context\\DonationsContext.cs",
+              "ToolTip": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDSTApp\\SPDPBWeb\\SPDPBWeb\\SPDPBWeb\\Context\\DonationsContext.cs",
+              "RelativeToolTip": "SPDPBWeb\\Context\\DonationsContext.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-31T19:54:43.052Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "donations-index.js",
+              "DocumentMoniker": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDSTApp\\SPDPBWeb\\SPDPBWeb\\SPDPBWeb\\wwwroot\\js\\donations-index.js",
+              "RelativeDocumentMoniker": "SPDPBWeb\\wwwroot\\js\\donations-index.js",
+              "ToolTip": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDSTApp\\SPDPBWeb\\SPDPBWeb\\SPDPBWeb\\wwwroot\\js\\donations-index.js",
+              "RelativeToolTip": "SPDPBWeb\\wwwroot\\js\\donations-index.js",
+              "ViewState": "AQIAACUAAAAAAAAAAAAAADMAAABDAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-07-31T08:22:02.543Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "nav.html",
-              "DocumentMoniker": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\SPDPBWeb\\nav.html",
-              "RelativeDocumentMoniker": "SPDPBWeb\\nav.html",
-              "ToolTip": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\SPDPBWeb\\nav.html",
-              "RelativeToolTip": "SPDPBWeb\\nav.html",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAVAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2024-07-22T14:26:05.628Z",
+              "Title": "dnoation_index.css",
+              "DocumentMoniker": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDSTApp\\SPDPBWeb\\SPDPBWeb\\SPDPBWeb\\wwwroot\\css\\dnoation_index.css",
+              "RelativeDocumentMoniker": "SPDPBWeb\\wwwroot\\css\\dnoation_index.css",
+              "ToolTip": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDSTApp\\SPDPBWeb\\SPDPBWeb\\SPDPBWeb\\wwwroot\\css\\dnoation_index.css",
+              "RelativeToolTip": "SPDPBWeb\\wwwroot\\css\\dnoation_index.css",
+              "ViewState": "AQIAACsAAAAAAAAAAAAAwDQAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2024-07-31T08:20:58.372Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "TempleLayout.html",
-              "DocumentMoniker": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\SPDPBWeb\\TempleLayout.html",
-              "RelativeDocumentMoniker": "SPDPBWeb\\TempleLayout.html",
-              "ToolTip": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\SPDPBWeb\\TempleLayout.html",
-              "RelativeToolTip": "SPDPBWeb\\TempleLayout.html",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAAAAAA",
+              "Title": "index.html",
+              "DocumentMoniker": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDSTApp\\SPDPBWeb\\SPDPBWeb\\SPDPBWeb\\wwwroot\\index.html",
+              "RelativeDocumentMoniker": "SPDPBWeb\\wwwroot\\index.html",
+              "ToolTip": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDSTApp\\SPDPBWeb\\SPDPBWeb\\SPDPBWeb\\wwwroot\\index.html",
+              "RelativeToolTip": "SPDPBWeb\\wwwroot\\index.html",
+              "ViewState": "AQIAADwAAAAAAAAAAADwv04AAAArAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2024-07-22T14:10:45.496Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "home1.html",
-              "DocumentMoniker": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\SPDPBWeb\\home1.html",
-              "RelativeDocumentMoniker": "SPDPBWeb\\home1.html",
-              "ToolTip": "C:\\Users\\sudar\\OneDrive\\Documents\\SUDARSHAN\\SPDST\\SPDBP\\SPDPBWeb\\SPDPBWeb\\home1.html",
-              "RelativeToolTip": "SPDPBWeb\\home1.html",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAABfAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2024-07-22T14:10:26.55Z",
+              "WhenOpened": "2024-07-31T08:15:31.79Z",
               "EditorCaption": ""
             }
           ]
