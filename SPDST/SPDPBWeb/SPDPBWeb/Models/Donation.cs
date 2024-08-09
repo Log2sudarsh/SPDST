@@ -29,6 +29,9 @@ namespace SPDSTApi
         [Column("payment_status")]
         public bool Payment_Status { get; set; }
 
+        [Column("receip_type")]
+        public string? Receipt_Type { get; set; }
+
         [Column("transaction_no")]
         public string? Transaction_No { get; set; }
 

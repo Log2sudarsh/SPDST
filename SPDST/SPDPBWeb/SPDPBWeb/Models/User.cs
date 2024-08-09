@@ -22,10 +22,10 @@ namespace SPDPBWeb.Models
        public string? Place { get; set; }
 
         [Column("contact_no")]
-        public long Contact_No { get; set; }
+        public long? Contact_No { get; set; }
 
         [Column("pledge_amount")]
-        public int Pledge_Amount { get; set; }
+        public int? Pledge_Amount { get; set; }
 
         [Column("created_by")]
         public required string Created_By { get; set; }
@@ -38,6 +38,9 @@ namespace SPDPBWeb.Models
 
         [Column("modified_on")]
         public DateTime Modified_On { get; set; }
+
+        [Column("user_type")]
+        public string? User_Type { get; set; }
 
         public ICollection<Donation>? Donations { get; set; }
     }

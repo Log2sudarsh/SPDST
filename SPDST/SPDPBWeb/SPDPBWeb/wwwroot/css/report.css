@@ -1,0 +1,55 @@
+﻿/* Basic table styling */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt; /* Smaller font size for a compact table */
+}
+.filter-input
+{
+    border-radius:10px !important;
+}
+/* Header row styling */
+.table thead th {
+    padding: 0; /* Remove padding from header cells */
+    margin: 0; /* Remove margin from header cells */
+    position: relative;
+    border: 1px solid #ccc; /* Optional: border for clarity */
+    height: 20px; /* Control the height of the header row */
+    background-color: #f8f9fa; /* Light background color for headers */
+}
+
+/* Filter input styling */
+.filter-input {
+    font-size: 9pt; /* Small font size */
+    padding: 0px 0px; /* Smaller padding for input */
+    border-radius: 4px; /* Rounded corners */
+    border: 1px solid #ccc; /* Light grey border */
+    width: 100%; /* Make input fit the header cell */
+    box-sizing: border-box; /* Ensure the width includes padding and border */
+    margin: 0; /* Remove any default margin */
+    display: block;
+}
+
+/* Table cell styling */
+.table th, .table td {
+    padding: 0px 0px; /* Reduced padding for compact layout */
+    text-align: left;
+    vertical-align: middle;
+}
+
+/* Table row and cell borders */
+.table th, .table td {
+    border: 1px solid #dee2e6; /* Light border for rows and cells */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .table thead th {
+        font-size: 8pt; /* Smaller font size for headers on mobile screens */
+    }
+
+    .filter-input {
+        font-size: 8pt; /* Smaller font size for filter inputs on mobile */
+        padding: 1px 3px; /* Adjust padding for smaller screens */
+    }
+}

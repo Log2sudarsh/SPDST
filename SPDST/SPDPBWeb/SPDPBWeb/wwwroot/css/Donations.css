@@ -1,4 +1,5 @@
-﻿table {
+﻿/* General styles for table */
+table {
     width: 100%;
     border-collapse: collapse;
 }
@@ -69,6 +70,49 @@ th, td {
         max-width: 90%;
         margin: 1.75rem auto;
     }
+
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table, th, td {
+        width: 100%;
+        display: block;
+        text-align: left;
+        padding: 8px;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tr {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    td {
+        display: flex;
+        justify-content: space-between;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+    }
+
+        td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 0;
+            width: 45%;
+            padding-left: 15px;
+            font-weight: bold;
+            text-align: left;
+        }
 }
 
 input, label {

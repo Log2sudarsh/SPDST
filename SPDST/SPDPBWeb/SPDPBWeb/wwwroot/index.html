@@ -24,11 +24,11 @@
         <h4 class="text-center section-title">ದಾನಿಗಳ ದೇಣಿಗೆ ವಿವರಗಳು</h4>
 
 
-        <table style="margin-bottom:8px; width:100%;">
+        <table style="margin-bottom: 8px; width: 100%; font-size: 10pt;">
             <thead style="background-color:#5477cf;color:white">
                 <tr>
-                    <th style="width:34%">ಪಾವತಿಸಿದ ಒಟ್ಟು ಮೊತ್ತ</th>
-                    <th style="width:33%">ಬಾಕಿ ಇರುವ ಒಟ್ಟು ಮೊತ್ತ</th>
+                    <th style="width:34%;">ಒಟ್ಟು ಸಂಗ್ರಹವಾದ ದೇಣಿಗೆ</th>
+                    <th style="width:33%">ಬಾಕಿ ಇರುವ ದೇಣಿಗೆ</th>
                     <th style="width:33%">ಒಟ್ಟು ಮೊತ್ತ</th>
                 </tr>
             </thead>
@@ -43,7 +43,7 @@
         </table>
 
 
-        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="ನಿಮ್ಮ ಹೆಸರನ್ನು ಹುಡುಕಿ - ಕನ್ನಡ ಅಥವಾ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಟೈಪ್ ಮಾಡಬಹುದು" class="form-control" style="margin-bottom: 10px; border:solid 1px #2e67fc;">
+        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="ನಿಮ್ಮ ಹೆಸರನ್ನು ಹುಡುಕಿ - ಕನ್ನಡ ಅಥವಾ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಟೈಪ್ ಮಾಡಬಹುದು" class="form-control" style="margin-bottom: 10px; border:solid 1px #2e67fc;font-size:9pt;">
 
         <!-- Loading Spinner -->
         <div id="loading" class="text-center" style="display: none;">
@@ -58,8 +58,9 @@
                     <th></th>
                     <th>ದಾನಿಗಳ ಹೆಸರು</th>
                     <th>ವಾಗ್ದಾನ ಮೊತ್ತ</th>
-                    <th>ಒಟ್ಟು ದೇಣಿಗೆ</th>
-                    <th></th>
+                    <th>ಒಟ್ಟು ದೇಣಿಗೆ <span id="sortIcon" style="cursor:pointer;">▲▼</span></th>
+                  
+                    <th style="display:none"></th>
                 </tr>
             </thead>
             <tbody>
@@ -80,7 +81,7 @@
                         <!-- User Details Section -->
 
                         <div id="userDetailsSection">
-                            <p><strong>ದಾನಿಗಳ ಹೆಸರು:</strong> <span id="modalNameKn"></span></p>
+                            <p><strong>ದಾನಿಗಳ ಹೆಸರು:</strong> <span id="modalNameKn"></span> - (<span id="modalUserId"></span>)</p>
                             <p><strong>ಸ್ಥಳ:</strong> <span id="modalPlace"></span></p>
                             <p><strong>ಸಂಪರ್ಕ ಸಂಖ್ಯೆ:</strong> <span id="modalContactNo"></span></p>
                             <p><strong>ವಾಗ್ದಾನದ ಮೊತ್ತ:</strong> <span id="modalPledgeAmount"></span></p>

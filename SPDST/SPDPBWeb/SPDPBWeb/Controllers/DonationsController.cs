@@ -100,6 +100,31 @@ namespace SPDSTApi.Controllers
             return Ok(user);
         }
 
+        // GET: api/donations/report
+        [HttpGet("report")]
+        public IActionResult GetDonorReport()
+        {
+            var query = from t1 in _context.Users
+                        join t2 in _context.Donations on t1.User_Id equals t2.User_Id into donationsGroup
+                        from t2 in donationsGroup.DefaultIfEmpty()
+                        orderby t1.User_Id
+                        select new
+                        {
+                            UserId = t1.User_Id,
+                            NameKn = t1.Name_Kn,
+                            Place = t1.Place,
+                            ContactNo = t1.Contact_No,
+                            PledgeAmount = t1.Pledge_Amount,
+                            UserType = t1.User_Type,
+                            DonatedAmount = t2.Donated_Amount,
+                            ReceiptNo = t2.Receipt_No,
+                            PaymentStatus = t2.Payment_Status,
+                            ReceiptType = t2.Receipt_Type
+                        };
+            var result = query.ToList();
+            return Ok(result);
+        }
+
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.User_Id == id);
@@ -127,6 +152,34 @@ namespace SPDSTApi.Controllers
 
             return CreatedAtAction(nameof(GetDonations), new { id = donation.Donation_Id }, donation);
         }
-               
+
+        // POST: api/donations/adduser
+        [HttpPost("adduser")]
+        public IActionResult AddUser([FromBody] UserDto userDto)
+        {
+            if (userDto == null)
+            {
+                return BadRequest("User data is null.");
+            }
+
+            var newUser = new User
+            {
+                Name_Kn = userDto.Name_Kn,
+                Name_En = userDto.Name_En,
+                Place = userDto.Place,
+                Contact_No = userDto.Contact_No,
+                Pledge_Amount = userDto.Pledge_Amount,
+                Created_On = DateTime.UtcNow,
+                Created_By=userDto.Created_By,
+                Modified_By=userDto.Created_By,
+                Modified_On=DateTime.UtcNow
+            };
+
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
+
+            return Ok("User added successfully.");
+        }
+
     }
 }
