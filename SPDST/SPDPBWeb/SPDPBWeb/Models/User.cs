@@ -18,6 +18,7 @@ namespace SPDPBWeb.Models
         [Column("name_kn")]        
         public string? Name_Kn { get; set; }
 
+
         [Column("place")]
        public string? Place { get; set; }
 

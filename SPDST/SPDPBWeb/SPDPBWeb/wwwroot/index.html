@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/dnoation_index.css"> <!-- External CSS -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="js/clearHis.js"></script> <!-- External JS -->
     <script src="js/script.js"></script> <!-- External JS -->
     <script src="js/donations-index.js"></script> <!-- External JS -->
 </head>
@@ -38,7 +39,7 @@
                     <td class="text-danger" id="totalPending"></td>
                     <td class="text-info" id="totalAmount"></td>
                 </tr>
-                
+
             </tbody>
         </table>
 
@@ -57,9 +58,9 @@
                 <tr>
                     <th></th>
                     <th>ದಾನಿಗಳ ಹೆಸರು</th>
-                    <th>ವಾಗ್ದಾನ ಮೊತ್ತ</th>
+                    <th>ವಾಗ್ದಾನ ಮೊತ್ತ<span id="sortIcon2" style="cursor:pointer;">▲▼</span></th>
                     <th>ಒಟ್ಟು ದೇಣಿಗೆ <span id="sortIcon" style="cursor:pointer;">▲▼</span></th>
-                  
+
                     <th style="display:none"></th>
                 </tr>
             </thead>
@@ -107,11 +108,83 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="generateReceiptBtn">Generate Receipt</button>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="receipt-container" id="receiptTemplate">
+            <table style="width: 100%; border: 1px solid black;background-color:#baf8d9;color:black;">
+                <tr>
+                    <td colspan="3" style="text-align: center; font-weight: bold; font-size: 16px;">
+                        ॥ ಶ್ರೀ ಪತ್ರೇಶ್ವರ ಪ್ರಸನ್ನ ॥
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:left;vertical-align:top;">
+                        <img src="Images/Gavi_Logo.png" height="80" width="80" />
+                    </td>
+                    <td style="text-align: center; padding-bottom: 2px;line-height:20px !important;">
+                        <p style="font-size:18px;font-weight:bold">ಶ್ರೀ ಪತ್ರೇಶ್ವರ ದೇವಸ್ಥಾನದ ಸೇವಾ ಟ್ರಸ್ಟ್ (ರಿ)</p>
+                        <p style="font-size: 16px; font-weight: bold">Shree Patreshwar Devastana Seva Trust, Ⓡ, Yarehanchinal</p>
+                        <p style="font-size: 14px; font-weight: bold">ತಾ: ಕುಕನೂರು, ಜಿ: ಕೊಪ್ಪಳ</p>
+                        <p style="font-size: 16px; font-weight: bold; text-decoration:underline">Receipt/ದೇಣಿಗೆ ರಸೀದಿ</p>
+                    </td>
+                    <td style="text-align:left;vertical-align:top;">
+                        <img src="Images/Patreswara-Icon.png" height="80" width="80" style="border:solid 1px gray; border-radius:50px;" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: left; font-size: 10pt !important; font-weight: bold !important;" >
+                        Receipt No: <span id="receiptNo"></span>
+                    </td>
+                    <td style="text-align: right; font-size: 10pt !important; font-weight: bold !important;" colspan="2" >
+                        Date: <span id="receiptDate"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="border-top: 1px dotted #04542a; padding-top: 2px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="font-size: 10pt !important;font-weight: bold !important;">
+                        <p>ಶ್ರೀ/ಶ್ರೀಮತಿ: <span style=" font-size: 11pt !important; font-weight: bold !important;" id="donerName"></span>&nbsp;ಇವರಿಂದ ಶ್ರೀ ಪತ್ರೇಶ್ವರ ಹೊಸ ದೇವಸ್ಥನಾದ ನಿರ್ಮಾಣಕ್ಕೆ &nbsp;<span style=" font-size: 11pt !important; font-weight: bold !important;" id="amountInWords"></span>&nbsp;ರೂಪಾಯಿಗಳನ್ನು ಕೃತಜ್ಞತೆಯಿಂದ ಸ್ವೀಕರಿಸಲಾಗಿದೆ.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align: center !important; font-size: 14pt !important; font-weight: bold;" >
+                        <div style="width: 120px; margin: auto; border:solid 1px #04542a; padding: 5px;">ರೂ: <span id="amountInNo"></span>&nbsp;/-</div>
+                       
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="border-top: 1px dotted #04542a; padding-top: 2px;">                  
+                        <p style="text-align: left; font-size: 9pt !important; font-weight: bold !important;" >
+                            SHREE PATRESWARA DEVASTANA SEVA TRUST YAREHANCHINAL, CANARA BANK (KUKANOOR BRANCH)
+                            A/C NO: 120025858210, IFSC CODE: CNRB0011810 &nbsp;ಶ್ರೀ ಪತ್ತೇಶ್ವರ ದೇವಸ್ತಾನಕ್ಕೆ ಆನ್‌ಲೈನ್ ಮೂಲಕ ದೇಣಿಗೆ ಸಲ್ಲಿಸುವ ಭಕ್ತಾದಿಗಳು ಮೇಲಿನ ಬ್ಯಾಂಕ್ ಖಾತೆಗೆ ಜಮಾ ಮಾಡಲು ವಿನಂತಿಸಲಾಗಿದೆ.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align:center; border-top: 1px dotted #04542a; padding-top: 2px; font-size: 9pt !important; font-weight: bold !important;">
+                        <p>ಹೆಚ್ಚಿನ ವಿವರಗಳಿಗಾಗಿ ಸಂಪರ್ಕಿಸಿ: 9741892360, 9591710959, 9590015540, 8660947202, &nbsp;<strong>Email:</strong> Log2ppss@gmail.com</p>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align: center; font-size: 11pt !important; font-weight: bold !important;" >
+                        <p>ಧನ್ಯವಾದಗಳು</p>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+
+      
     </section>
+
 
     <!-- Footer -->
     <div id="footer-placeholder"></div>

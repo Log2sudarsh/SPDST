@@ -1,55 +1,94 @@
-﻿/* Basic table styling */
-.table {
+﻿/* Styling for cards */
+.card {
+    background-color: #8ff6b2;
+    border-radius: 10px;
+    padding: 0px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-section {
+    background-color: #c5e4f8;
+    border-radius: 10px;
+    padding:20px 10px 0 10px; 
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+
+.input-style {
+    height: 25px !important;
+    font-size: 9pt;
+}
+
+/* Toggle filter button */
+#filter-menu-toggle {
     width: 100%;
-    border-collapse: collapse;
-    font-size: 10pt; /* Smaller font size for a compact table */
-}
-.filter-input
-{
-    border-radius:10px !important;
-}
-/* Header row styling */
-.table thead th {
-    padding: 0; /* Remove padding from header cells */
-    margin: 0; /* Remove margin from header cells */
-    position: relative;
-    border: 1px solid #ccc; /* Optional: border for clarity */
-    height: 20px; /* Control the height of the header row */
-    background-color: #f8f9fa; /* Light background color for headers */
 }
 
-/* Filter input styling */
-.filter-input {
-    font-size: 9pt; /* Small font size */
-    padding: 0px 0px; /* Smaller padding for input */
-    border-radius: 4px; /* Rounded corners */
-    border: 1px solid #ccc; /* Light grey border */
-    width: 100%; /* Make input fit the header cell */
-    box-sizing: border-box; /* Ensure the width includes padding and border */
-    margin: 0; /* Remove any default margin */
-    display: block;
+/* Hide filter form by default */
+#filter-form {
+    display: none;
 }
 
-/* Table cell styling */
-.table th, .table td {
-    padding: 0px 0px; /* Reduced padding for compact layout */
-    text-align: left;
-    vertical-align: middle;
+/* Radio button styles */
+.form-group label {
+    margin-right: 5px;
+   
 }
 
-/* Table row and cell borders */
-.table th, .table td {
-    border: 1px solid #dee2e6; /* Light border for rows and cells */
+.btn-filter{
+    width:80px !important;
+    border-radius:200px;   
+    font-size:10pt;   
+    margin:10px 0 0 0;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .table thead th {
-        font-size: 8pt; /* Smaller font size for headers on mobile screens */
-    }
+.btn-clear {
+    width: 80px !important;
+    border-radius: 200px;
+    font-size: 10pt;
+    background-color: red !important;
+    border-block-color: red;
+    margin: 0 0 10px 0;
+}
 
-    .filter-input {
-        font-size: 8pt; /* Smaller font size for filter inputs on mobile */
-        padding: 1px 3px; /* Adjust padding for smaller screens */
+    /* Media Query for Responsive Design */
+    @media (max-width: 767px) {
+        .card {
+        margin-bottom: 10px;
     }
 }
+
+.bg-color-style{
+    background-color:#d6fbf2;
+    color:black;
+    
+}
+
+.card-body{
+   padding:10px 0 0 20px !important;
+}
+
+.section-title{
+    color:green !important;
+    font-size:15pt;
+    font-weight:bold;
+    margin-top:5px;
+}
+
+.summary-section {
+    background-color: #f1f1f1;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+    .summary-section p {
+        margin: 5px 0;
+        font-weight: bold;
+    }

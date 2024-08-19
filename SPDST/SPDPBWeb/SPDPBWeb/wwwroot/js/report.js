@@ -1,70 +1,114 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    const headers = document.querySelectorAll('.table thead th');
-    const filterInputs = document.querySelectorAll('.filter-input');
-    const tableBody = document.querySelector('table tbody');
+    const filterMenuToggle = document.getElementById('filter-menu-toggle');
+    const filterForm = document.getElementById('filter-form');
+    const filterSection = document.getElementById('filter-section');
+    const filterInputs = filterForm.querySelectorAll('input[type="text"]');
+    const radioInputs = filterForm.querySelectorAll('input[type="radio"]');
+    const cardsContainer = document.getElementById('cards-container');
+    const clearFiltersBtn = document.getElementById('clearFilters');
 
-    // Adjust the width of filter inputs based on header text length
-    headers.forEach((header, index) => {
-        const textLength = header.innerText.length;
-        const input = filterInputs[index];
+    const totalDonorsElem = document.getElementById('totalDonors');
+    const totalAmountPaidElem = document.getElementById('totalAmountPaid');
+    const totalAmountPendingElem = document.getElementById('totalAmountPending');
+    const totalAmountElem = document.getElementById('totalAmount');
 
-        if (input) {
-            const minWidth = 6; // Set a minimum width in characters for very short headers
-            input.style.width = `${Math.max(textLength + 2, minWidth)}ch`; // Adjust width based on header text length
-
-            input.addEventListener('input', function () {
-                filterTable(); // Call the filter function on input change
-            });
-        }
+    // Toggle filter form visibility
+    filterMenuToggle.addEventListener('click', function () {
+        filterForm.style.display = filterForm.style.display === 'none' ? 'block' : 'none';
+        filterSection.style.display = filterSection.style.display === 'none' ? 'block' : 'none';
     });
 
-    // Fetch and populate table data
+    // Fetch and populate cards with data
     function loadData() {
         fetch('/api/donations/report')
             .then(response => response.json())
             .then(data => {
-                populateTable(data);
+                populateCards(data);
+                updateSummary(data);
             })
             .catch(error => console.error('Error fetching data:', error));
     }
 
-    // Populate table with data
-    function populateTable(data) {
-        tableBody.innerHTML = ''; // Clear existing data
-
+    // Populate cards with data
+    function populateCards(data) {
+        cardsContainer.innerHTML = ''; // Clear existing data
+        let i = 1;
         data.forEach(row => {
-            const tr = document.createElement('tr');
+            const card = document.createElement('div');
+            card.className = 'card col-md-6 ml-2 mr-2 bg-color-style';
 
-            tr.innerHTML = `
-                <td>${row.userId}</td>
-                <td>${row.nameKn}</td>
-                <td>${row.place}</td>
-                <td>${row.contactNo}</td>
-                <td>${row.pledgeAmount}</td>
-                <td>${row.userType}</td>
-                <td>${row.donatedAmount}</td>
-                <td>${row.receiptNo}</td>
-                <td>${row.paymentStatus}</td>
-                <td>${row.receiptType}</td>
+            card.innerHTML = `
+                <div class="card-body" style="line-height:28px;">
+                    <h6 class="card-title">${i}. ${row.nameKn}</h6> 
+                    <p class="card-text">  
+                    ${row.nameEn}<br>
+                        <strong>ಸ್ಥಳ:</strong> ${row.place}<br>
+                        <strong>ಸಂಪರ್ಕ ಸಂಖ್ಯೆ:</strong> ${row.contactNo === 9999999999 ? '' : row.contactNo}<br>
+                        <strong>ವಾಗ್ದಾನದ ಮೊತ್ತ:</strong> ${row.pledgeAmount === 0 ? '' : row.pledgeAmount}<br>
+                        <strong>ದಾನಿಗಳ ವಿಧ:</strong> ${row.userType === 'F' ? 'Farmer' : 'Employee'}<br>
+                        <strong>ದೇಣಿಗೆ ಮೊತ್ತ:</strong> ${row.donatedAmount}<br>
+                        <strong>ರಶೀದಿ ಸಂಖ್ಯೆ:</strong> ${row.receiptNo}<br>
+                        <strong>ಪಾವತಿ ಸ್ಥಿತಿ:</strong> ${row.paymentStatus === true ? 'Paid' : 'Pending'}<br>
+                        <strong>ರಶೀದಿ ವಿಧ:</strong> ${row.receiptType}
+                    </p>
+                </div>
             `;
-            tableBody.appendChild(tr);
+            cardsContainer.appendChild(card);
+            i++;
         });
     }
 
-    // Filter table rows based on input values
-    function filterTable() {
+    // Filter cards based on input values
+    function filterCards() {
         const filters = Array.from(filterInputs).map(input => input.value.toLowerCase());
-        const rows = tableBody.querySelectorAll('tr');
+        const radioFilters = {
+            userType: document.querySelector('input[name="userType"]:checked')?.value.toLowerCase(),
+            paymentStatus: document.querySelector('input[name="paymentStatus"]:checked')?.value.toLowerCase(),
+            receiptType: document.querySelector('input[name="receiptType"]:checked')?.value.toLowerCase(),
+        };
 
-        rows.forEach(row => {
-            const cells = Array.from(row.querySelectorAll('td'));
-            const match = filters.every((filter, i) => {
-                return cells[i].innerText.toLowerCase().includes(filter);
+        const filteredData = Array.from(cardsContainer.querySelectorAll('.card')).filter(card => {
+            const cardText = card.innerText.toLowerCase();
+            const matchesFilters = filters.every(filter => cardText.includes(filter));
+            const matchesRadioFilters = Object.keys(radioFilters).every(key => {
+                return !radioFilters[key] || cardText.includes(radioFilters[key]);
             });
-            row.style.display = match ? '' : 'none';
+
+            return matchesFilters && matchesRadioFilters;
         });
+
+        filteredData.forEach(card => card.style.display = '');
+        Array.from(cardsContainer.querySelectorAll('.card')).forEach(card => {
+            if (!filteredData.includes(card)) card.style.display = 'none';
+        });
+
+        updateSummary(filteredData.map(card => card.dataset));
     }
 
-    // Load initial data
+    // Update summary based on filtered data
+    function updateSummary(data) {
+        const totalDonors = data.length;
+        const totalAmountPaid = data.reduce((acc, item) => acc + (item.paymentStatus ? item.donatedAmount : 0), 0);
+        const totalAmountPending = data.reduce((acc, item) => acc + (!item.paymentStatus ? item.donatedAmount : 0), 0);
+        const totalAmount = data.reduce((acc, item) => acc + item.donatedAmount, 0);
+
+        totalDonorsElem.textContent = totalDonors;
+        totalAmountPaidElem.textContent = totalAmountPaid;
+        totalAmountPendingElem.textContent = totalAmountPending;
+        totalAmountElem.textContent = totalAmount;
+    }
+
+    // Clear filters
+    clearFiltersBtn.addEventListener('click', function () {
+        filterInputs.forEach(input => input.value = '');
+        radioInputs.forEach(input => input.checked = false);
+        filterCards();
+    });
+
+    // Filter cards when inputs change
+    filterInputs.forEach(input => input.addEventListener('input', filterCards));
+    radioInputs.forEach(input => input.addEventListener('change', filterCards));
+
+    // Initial load
     loadData();
 });

@@ -112,6 +112,7 @@ namespace SPDSTApi.Controllers
                         {
                             UserId = t1.User_Id,
                             NameKn = t1.Name_Kn,
+                            NameEn=t1.Name_En,
                             Place = t1.Place,
                             ContactNo = t1.Contact_No,
                             PledgeAmount = t1.Pledge_Amount,

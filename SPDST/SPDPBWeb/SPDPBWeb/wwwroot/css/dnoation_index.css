@@ -79,3 +79,19 @@ th, td {
     height: 3rem;
     border-width: 0.4em;
 }
+
+/*******************************RECEIPT STYLES****************************/
+.body-font {
+    font-size: 10pt !important;font-weight: bold !important;
+}
+
+.details-font {
+    font-size: 9pt !important;font-weight: bold !important;
+}
+.hearder-font {
+    font-size: 14pt !important;font-weight: bold;
+}
+
+.heighlight-font {
+    font-size: 11pt !important;font-weight: bold !important;
+}
