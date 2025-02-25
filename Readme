@@ -1,0 +1,18 @@
+<dx-data-grid *ngIf="(milestones$ | async) as milestones" [dataSource]="milestones" [showBorders]="true">
+  <dxi-column dataField="milestoneNo" caption="Milestone No"></dxi-column>
+  <dxi-column dataField="launchId" caption="Launch ID"></dxi-column>
+  <dxi-column dataField="firmware" caption="Firmware"></dxi-column>
+  <dxi-column dataField="createdBy" caption="Created By"></dxi-column>
+  <dxi-column dataField="startDate" caption="Start Date"></dxi-column>
+  <dxi-column dataField="endDate" caption="End Date"></dxi-column>
+
+  <dxi-column caption="Fastatus" [cellTemplate]="'fastatusTemplate'"></dxi-column>
+
+  <ng-template #fastatusTemplate let-cellData>
+    <ul *ngIf="cellData.row && cellData.row.data">
+      <li *ngFor="let status of ['New', 'InProgress', 'Completed', 'Resolved', 'Rerun']">
+        {{ status }}: {{ cellData.row.data.fastatus[0][status] }}
+      </li>
+    </ul>
+  </ng-template>
+</dx-data-grid>
