@@ -1,18 +1,20 @@
-<dx-data-grid *ngIf="(milestones$ | async) as milestones" [dataSource]="milestones" [showBorders]="true">
-  <dxi-column dataField="milestoneNo" caption="Milestone No"></dxi-column>
-  <dxi-column dataField="launchId" caption="Launch ID"></dxi-column>
-  <dxi-column dataField="firmware" caption="Firmware"></dxi-column>
-  <dxi-column dataField="createdBy" caption="Created By"></dxi-column>
-  <dxi-column dataField="startDate" caption="Start Date"></dxi-column>
-  <dxi-column dataField="endDate" caption="End Date"></dxi-column>
+.status-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 
-  <dxi-column caption="Fastatus" [cellTemplate]="'fastatusTemplate'"></dxi-column>
-
-  <ng-template #fastatusTemplate let-cellData>
-    <ul *ngIf="cellData.row && cellData.row.data">
-      <li *ngFor="let status of ['New', 'InProgress', 'Completed', 'Resolved', 'Rerun']">
-        {{ status }}: {{ cellData.row.data.fastatus[0][status] }}
-      </li>
-    </ul>
-  </ng-template>
-</dx-data-grid>
+.status-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  padding: 5px;
+  line-height: 1.2;
+}
