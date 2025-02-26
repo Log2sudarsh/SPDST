@@ -1,20 +1,203 @@
-.status-container {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
 
-.status-circle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-  text-align: center;
-  padding: 5px;
-  line-height: 1.2;
-}
+[
+  {
+    "milestoneNo": "Milestone Plan 1",
+    "launchId": 46834,
+    "firmware": "A1234",
+    "tags": ["tag1", "tag2", "tag3", "tag4"],
+    "createdBy": "Sudarshan",
+    "startDate": "01/01/2025",
+    "endDate": "01/03/2025",
+    "fastatus": [{ "New": 3 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 2",
+    "launchId": 47964,
+    "firmware": "A2345",
+    "tags": ["tag1", "tag2"],
+    "createdBy": "Trishika",
+    "startDate": "01/03/2025",
+    "endDate": "01/05/2025",
+    "fastatus": [{ "InProgress": 2 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 3",
+    "launchId": 48290,
+    "firmware": "B5678",
+    "tags": ["tag3", "tag4"],
+    "createdBy": "Amit",
+    "startDate": "02/01/2025",
+    "endDate": "02/28/2025",
+    "fastatus": [{ "Completed": 5 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 4",
+    "launchId": 49210,
+    "firmware": "C6789",
+    "tags": ["tag1"],
+    "createdBy": "Neha",
+    "startDate": "03/01/2025",
+    "endDate": "03/15/2025",
+    "fastatus": [{ "Resolved": 1 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 5",
+    "launchId": 50345,
+    "firmware": "D7890",
+    "tags": ["tag2", "tag3"],
+    "createdBy": "Rohan",
+    "startDate": "03/16/2025",
+    "endDate": "04/01/2025",
+    "fastatus": [{ "Rerun": 4 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 6",
+    "launchId": 51478,
+    "firmware": "E8901",
+    "tags": ["tag4"],
+    "createdBy": "Priya",
+    "startDate": "04/02/2025",
+    "endDate": "04/20/2025",
+    "fastatus": [{ "New": 2 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 7",
+    "launchId": 52600,
+    "firmware": "F9012",
+    "tags": ["tag1", "tag3"],
+    "createdBy": "Suresh",
+    "startDate": "04/21/2025",
+    "endDate": "05/05/2025",
+    "fastatus": [{ "Completed": 6 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 8",
+    "launchId": 53745,
+    "firmware": "G0123",
+    "tags": ["tag2", "tag4"],
+    "createdBy": "Meera",
+    "startDate": "05/06/2025",
+    "endDate": "05/25/2025",
+    "fastatus": [{ "InProgress": 3 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 9",
+    "launchId": 54890,
+    "firmware": "H1234",
+    "tags": ["tag1", "tag2", "tag3"],
+    "createdBy": "Rajesh",
+    "startDate": "05/26/2025",
+    "endDate": "06/10/2025",
+    "fastatus": [{ "Resolved": 2 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 10",
+    "launchId": 56035,
+    "firmware": "I2345",
+    "tags": ["tag4"],
+    "createdBy": "Ayesha",
+    "startDate": "06/11/2025",
+    "endDate": "06/30/2025",
+    "fastatus": [{ "Rerun": 5 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 11",
+    "launchId": 57180,
+    "firmware": "J3456",
+    "tags": ["tag1"],
+    "createdBy": "Vikram",
+    "startDate": "07/01/2025",
+    "endDate": "07/15/2025",
+    "fastatus": [{ "New": 7 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 12",
+    "launchId": 58325,
+    "firmware": "K4567",
+    "tags": ["tag2", "tag3"],
+    "createdBy": "Anita",
+    "startDate": "07/16/2025",
+    "endDate": "07/31/2025",
+    "fastatus": [{ "Completed": 4 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 13",
+    "launchId": 59470,
+    "firmware": "L5678",
+    "tags": ["tag4"],
+    "createdBy": "Sunil",
+    "startDate": "08/01/2025",
+    "endDate": "08/20/2025",
+    "fastatus": [{ "InProgress": 1 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 14",
+    "launchId": 60615,
+    "firmware": "M6789",
+    "tags": ["tag1", "tag3"],
+    "createdBy": "Deepa",
+    "startDate": "08/21/2025",
+    "endDate": "09/05/2025",
+    "fastatus": [{ "Resolved": 3 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 15",
+    "launchId": 61760,
+    "firmware": "N7890",
+    "tags": ["tag2"],
+    "createdBy": "Kabir",
+    "startDate": "09/06/2025",
+    "endDate": "09/25/2025",
+    "fastatus": [{ "Rerun": 6 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 16",
+    "launchId": 62905,
+    "firmware": "O8901",
+    "tags": ["tag1", "tag4"],
+    "createdBy": "Fatima",
+    "startDate": "09/26/2025",
+    "endDate": "10/10/2025",
+    "fastatus": [{ "New": 5 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 17",
+    "launchId": 64050,
+    "firmware": "P9012",
+    "tags": ["tag3"],
+    "createdBy": "Arjun",
+    "startDate": "10/11/2025",
+    "endDate": "10/30/2025",
+    "fastatus": [{ "Completed": 2 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 18",
+    "launchId": 65195,
+    "firmware": "Q0123",
+    "tags": ["tag2", "tag4"],
+    "createdBy": "Lata",
+    "startDate": "11/01/2025",
+    "endDate": "11/20/2025",
+    "fastatus": [{ "InProgress": 8 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 19",
+    "launchId": 66340,
+    "firmware": "R1234",
+    "tags": ["tag1"],
+    "createdBy": "Surya",
+    "startDate": "11/21/2025",
+    "endDate": "12/05/2025",
+    "fastatus": [{ "Resolved": 4 }]
+  },
+  {
+    "milestoneNo": "Milestone Plan 20",
+    "launchId": 67485,
+    "firmware": "S2345",
+    "tags": ["tag3", "tag4"],
+    "createdBy": "Pooja",
+    "startDate": "12/06/2025",
+    "endDate": "12/31/2025",
+    "fastatus": [{ "Rerun": 3 }]
+  }
+]
