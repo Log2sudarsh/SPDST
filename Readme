@@ -1,34 +1,87 @@
 
-/* Tooltip container */
-.tooltip-container {
+<dxi-column caption="Status Label" cellTemplate="fastatusTemplate"></dxi-column>
+
+<div *dxTemplate="let cellData of 'fastatusTemplate'">
+  <div class="status-container">
+    <div
+      *ngFor="let status of statusList"
+      class="status-circle"
+      [ngStyle]="{
+        'background-color': 
+          status === STATUS_NEW ? '#ff5733' :
+          status === STATUS_IN_PROGRESS ? '#ffbd33' :
+          status === STATUS_COMPLETED ? '#33ff57' :
+          status === STATUS_RESOLVED ? '#3385ff' :
+          status === STATUS_RERUN ? '#a633ff' :
+          '#ccc'
+      }"
+      (mouseenter)="hoverStatus = status"
+      (mouseleave)="hoverStatus = ''"
+    >
+      {{ cellData.row?.data?.fastatus?.length ? (cellData.row.data.fastatus[0][status] ?? 0) : 0 }}
+      
+      <!-- Custom Tooltip -->
+      <span class="custom-tooltip" *ngIf="hoverStatus === status">
+        {{ status }}
+      </span>
+    </div>
+  </div>
+</div>
+
+
+
+
+.status-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+.status-circle {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  padding: 5px;
+  line-height: 1.2;
+  min-width: 50px;
   cursor: pointer;
 }
 
-/* Tooltip text (hidden by default) */
-.tooltip-text {
+/* Tooltip Styles */
+.custom-tooltip {
   position: absolute;
-  top: -40px; /* Move tooltip above the circle */
+  bottom: 60px; /* Position above the circle */
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.9);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 5px;
+  background-color: black;
+  color: white;
+  padding: 5px 8px;
   font-size: 12px;
-  font-weight: bold;
+  border-radius: 4px;
   white-space: nowrap;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-  z-index: 9999; /* Ensure tooltip is on top */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  opacity: 0.9;
+  z-index: 10;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Show tooltip on hover */
-.tooltip-container:hover .tooltip-text {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(-5px); /* Floating effect */
+/* Tooltip Arrow */
+.custom-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
 }
