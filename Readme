@@ -12,7 +12,7 @@
     "type": "Run,HW",
     "location": "Location A",
     "plan": "Plan A",
-    "testStats": [{ "Passed": 3, "Failed": 2 }]
+    "testStats": [{ "Passed": 3 }]
   },
   {
     "milestone": "Milestone Plan 2",
@@ -69,5 +69,75 @@
     "location": "Location E",
     "plan": "Plan E",
     "testStats": [{ "Not Started": 5 }]
+  },
+  {
+    "milestone": "Milestone Plan 6",
+    "launchId": 46839,
+    "firmware": "F1516",
+    "tags": ["tag15", "tag16", "tag17"],
+    "createdBy": "Pooja",
+    "startDate": "06/01/2025",
+    "endDate": "06/13/2025",
+    "faStatus": [{ "New": 7 }],
+    "type": "Run,HW",
+    "location": "Location F",
+    "plan": "Plan F",
+    "testStats": [{ "Passed": 2, "Failed": 1 }]
+  },
+  {
+    "milestone": "Milestone Plan 7",
+    "launchId": 46840,
+    "firmware": "G1718",
+    "tags": ["tag18", "tag19"],
+    "createdBy": "Vikram",
+    "startDate": "07/01/2025",
+    "endDate": "07/15/2025",
+    "faStatus": [{ "InProgress": 3 }],
+    "type": "SW",
+    "location": "Location G",
+    "plan": "Plan G",
+    "testStats": [{ "Invalidated": 2, "Blocked": 1 }]
+  },
+  {
+    "milestone": "Milestone Plan 8",
+    "launchId": 46841,
+    "firmware": "H1920",
+    "tags": ["tag20", "tag21", "tag22"],
+    "createdBy": "Meera",
+    "startDate": "08/01/2025",
+    "endDate": "08/17/2025",
+    "faStatus": [{ "Completed": 5 }],
+    "type": "Run,HW",
+    "location": "Location H",
+    "plan": "Plan H",
+    "testStats": [{ "Running": 3, "Cancelled": 1 }]
+  },
+  {
+    "milestone": "Milestone Plan 9",
+    "launchId": 46842,
+    "firmware": "I2122",
+    "tags": ["tag23", "tag24"],
+    "createdBy": "Kiran",
+    "startDate": "09/01/2025",
+    "endDate": "09/19/2025",
+    "faStatus": [{ "Resolved": 6 }],
+    "type": "HW",
+    "location": "Location I",
+    "plan": "Plan I",
+    "testStats": [{ "Failed": 4, "Passed": 3 }]
+  },
+  {
+    "milestone": "Milestone Plan 10",
+    "launchId": 46843,
+    "firmware": "J2324",
+    "tags": ["tag25", "tag26", "tag27"],
+    "createdBy": "Sanya",
+    "startDate": "10/01/2025",
+    "endDate": "10/21/2025",
+    "faStatus": [{ "Rerun": 2 }],
+    "type": "Run,HW",
+    "location": "Location J",
+    "plan": "Plan J",
+    "testStats": [{ "Not Started": 2, "Blocked": 1 }]
   }
 ]
