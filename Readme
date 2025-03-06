@@ -1,1 +1,41 @@
-Angular provides services for making API calls using HttpClient, which enhances maintainability, ensures cleaner code, and prevents duplication. It also promotes a clear separation of concerns by keeping Node.js server logic outside the Angular client app. Additionally, within services, we can utilize TypeScript interfaces for data manipulation and business logic, improving code structure and reliability.
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { switchMap, combineLatestWith, map } from 'rxjs/operators';
+import { Milestone } from '../models/milestone.model';
+import { MilestoneFaStatus } from '../models/milestone-fa-status.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class MilestoneService {
+  private milestonesSubject = new BehaviorSubject<Milestone[]>([]);
+  milestones$ = this.milestonesSubject.asObservable();
+
+  constructor(private http: HttpClient) {}
+
+  fetchMergedData(requestBody: any): Observable<Milestone[]> {
+    return this.http.post<Milestone[][]>('/api/milestones', requestBody).pipe(
+      switchMap(milestoneResponse => {
+        // 🔹 Flatten Milestone API Response (if it's a nested array)
+        const milestones = milestoneResponse.flat();
+
+        return this.http.get<MilestoneFaStatus[]>('/api/milestoneFaStatus').pipe(
+          map(faStatusResponse => {
+            return milestones.map(milestone => {
+              // 🔹 Find the corresponding faStatus entry by launchId
+              const matchingFaStatus = faStatusResponse.find(fa => fa.launchId === milestone.launchId);
+
+              return {
+                ...milestone,
+                eaStatus: matchingFaStatus?.eaStatus || [], // Default empty array if not found
+                tstStats: matchingFaStatus?.tstStats || []
+              };
+            });
+          })
+        );
+      })
+    );
+  }
+}
