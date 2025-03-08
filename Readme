@@ -1,11 +1,5 @@
 
-
-/* Hide the search icon inside the filter row */
-::ng-deep .dx-datagrid .dx-editor-cell .dx-placeholder {
+/* Hide the search icon inside filter row inputs */
+::ng-deep .dx-editor-cell .dx-texteditor-buttons-container {
   display: none !important;
-}
-
-/* Ensure the filter row input boxes remain visible */
-::ng-deep .dx-datagrid .dx-editor-cell input {
-  padding-left: 8px !important; /* Adjust padding after removing icon */
 }
