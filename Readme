@@ -1,12 +1,18 @@
 
-/* Light blue background & white text for header */
-::ng-deep .dx-datagrid-headers {
+/* Apply light blue background & white text only to the first header row */
+::ng-deep .dx-datagrid-headers .dx-row:first-child {
   background-color: #add8e6 !important; /* Light Blue */
   color: white !important; /* White text */
 }
 
-/* Ensure text inside header cells is white */
-::ng-deep .dx-datagrid-headers .dx-row > td {
+/* Ensure text inside header cells remains white */
+::ng-deep .dx-datagrid-headers .dx-row:first-child > td {
   color: white !important;
   font-weight: bold;
+}
+
+/* Reset second row (filter row) to default styles */
+::ng-deep .dx-datagrid-headers .dx-row:not(:first-child) {
+  background-color: white !important; /* Reset to default */
+  color: black !important; /* Reset text to black */
 }
