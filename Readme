@@ -1,18 +1,11 @@
 
-/* Apply light blue background & white text only to the first header row */
-::ng-deep .dx-datagrid-headers .dx-row:first-child {
-  background-color: #add8e6 !important; /* Light Blue */
-  color: white !important; /* White text */
+
+/* Hide the search icon inside the filter row */
+::ng-deep .dx-datagrid .dx-editor-cell .dx-placeholder {
+  display: none !important;
 }
 
-/* Ensure text inside header cells remains white */
-::ng-deep .dx-datagrid-headers .dx-row:first-child > td {
-  color: white !important;
-  font-weight: bold;
-}
-
-/* Reset second row (filter row) to default styles */
-::ng-deep .dx-datagrid-headers .dx-row:not(:first-child) {
-  background-color: white !important; /* Reset to default */
-  color: black !important; /* Reset text to black */
+/* Ensure the filter row input boxes remain visible */
+::ng-deep .dx-datagrid .dx-editor-cell input {
+  padding-left: 8px !important; /* Adjust padding after removing icon */
 }
