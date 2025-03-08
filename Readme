@@ -1,46 +1,18 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
-import { Milestone } from '../models/milestone.model';
-import { MilestoneFaStatus } from '../models/milestone-fa-status.model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class MilestoneService {
-  private milestonesSubject = new BehaviorSubject<Milestone[]>([]);
-  milestones$ = this.milestonesSubject.asObservable();
+.icon-style {
+  cursor: pointer;
+  font-size: 24px;
+  transition: transform 0.2s;
+}
 
-  constructor(private http: HttpClient) {}
+.star-icon {
+  color: gold;
+}
 
-  fetchMergedData(requestBody: any): Observable<Milestone[]> {
-    return this.http.post<Milestone[][]>('/api/milestones', requestBody).pipe(
-      switchMap(milestoneResponse => {
-        // 🔹 Flatten Milestone API Response
-        const milestones = milestoneResponse.flat();
+.chart-icon {
+  color: dodgerblue;
+}
 
-        return this.http.get<MilestoneFaStatus[]>('/api/milestoneFaStatus').pipe(
-          map(faStatusResponse => {
-            console.log('Milestone API Response:', milestones);
-            console.log('FaStatus API Response:', faStatusResponse);
-
-            return milestones.map(milestone => {
-              // 🔹 Convert launchId to Number (Ensure Matching Types)
-              const milestoneLaunchId = Number(milestone.launchId);
-
-              const matchingFaStatus = faStatusResponse.find(fa => Number(fa.launchId) === milestoneLaunchId);
-              console.log('Matching faStatus for LaunchId', milestoneLaunchId, ':', matchingFaStatus);
-
-              return {
-                ...milestone,
-                eaStatus: matchingFaStatus?.eaStatus || [], // Ensure it's not undefined
-                tstStats: matchingFaStatus?.tstStats || []
-              };
-            });
-          })
-        );
-      })
-    );
-  }
+.icon-style:hover {
+  transform: scale(1.2);
 }
