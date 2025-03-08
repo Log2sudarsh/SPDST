@@ -1,18 +1,33 @@
+.action-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between icons */
+}
 
 .icon-style {
   cursor: pointer;
-  font-size: 24px;
-  transition: transform 0.2s;
+  padding: 4px;
+  border-radius: 50%;
+  transition: transform 0.2s, background-color 0.3s;
 }
 
 .star-icon {
+  font-size: 22px;
   color: gold;
 }
 
 .chart-icon {
-  color: dodgerblue;
+  font-size: 18px;
+  width: 28px;
+  height: 28px;
+  background-color: blue;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .icon-style:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
+  opacity: 0.8;
 }
