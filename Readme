@@ -1,43 +1,17 @@
 
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Project } from '../models/project.model';
+.mat-form-field {
+  margin-bottom: 16px; /* ✅ Adds spacing between dropdown and DataGrid */
+  width: 200px; /* ✅ Makes select dropdown smaller */
+}
 
-@Injectable({
-  providedIn: 'root',
-})
-export class ProjectsService {
-  constructor() {}
+.mat-select {
+  font-size: 12px !important; /* ✅ Reduce font size */
+}
 
-  // **Hardcoded Project Data**
-  getProjects(): Observable<Project[]> {
-    const projects: Project[] = [
-      {
-        projectName: 'Project A',
-        automationId: 101,
-        automationUrl: 'https://example.com/projectA',
-        validationTypeNm: 'Type A',
-        labNm: 'Lab 1',
-        programNm: 'Program X',
-        productLineNm: 'Product Line 1',
-        testSummaryUniqueRef: null,
-        sourceSystemType: null,
-        testRunUniqueRef: null,
-      },
-      {
-        projectName: 'Project B',
-        automationId: 102,
-        automationUrl: 'https://example.com/projectB',
-        validationTypeNm: 'Type B',
-        labNm: 'Lab 2',
-        programNm: 'Program Y',
-        productLineNm: 'Product Line 2',
-        testSummaryUniqueRef: null,
-        sourceSystemType: null,
-        testRunUniqueRef: null,
-      },
-    ];
+.mat-option {
+  font-size: 12px !important; /* ✅ Reduce font size inside dropdown options */
+}
 
-    return of(projects); // Returning as an Observable
-  }
+.mat-form-field-wrapper {
+  padding-bottom: 0px !important; /* ✅ Removes extra padding */
 }
