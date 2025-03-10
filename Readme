@@ -1,60 +1,114 @@
 
-import { Component, OnInit } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { ProjectService } from '../services/project.service';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Project } from '../models/project.model';
-import { tap } from 'rxjs/operators';
 
-@Component({
-  selector: 'app-milestone-list',
-  templateUrl: './milestone-list.component.html',
-  styleUrls: ['./milestone-list.component.css'],
+@Injectable({
+  providedIn: 'root',
 })
-export class MilestoneListComponent implements OnInit {
-  projects$!: Observable<Project[]>; // Observable for project data
-  selectedProject!: Project; // Stores the selected project
-  private projectSubject = new BehaviorSubject<Project | null>(null); // BehaviorSubject for default selection
-  selectedProject$ = this.projectSubject.asObservable(); // Observable for selected project
+export class ProjectService {
+  private http = inject(HttpClient);
+  private apiUrl = 'https://api.example.com/projects';
 
-  constructor(private projectService: ProjectService) {}
+  getProjects(): Observable<Project[]> {
+    return this.http.get<Project[]>(this.apiUrl); // Token & headers are applied automatically
+  }
+}
 
-  ngOnInit(): void {
-    this.projects$ = this.projectService.getProjects().pipe(
-      tap((projects) => {
-        if (projects.length > 0) {
-          this.projectSubject.next(projects[0]); // Set first project as default
-        }
+--++++
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Milestone } from '../models/milestone.model';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class MilestoneService {
+  private http = inject(HttpClient);
+  private apiUrl = 'https://api.example.com/milestones';
+
+  getMilestones(requestBody: any): Observable<Milestone[]> {
+    return this.http.post<Milestone[]>(this.apiUrl, requestBody); // No token or extra headers
+  }
+}
+
+_______
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService implements HttpInterceptor {
+  private http = inject(HttpClient);
+  private tokenUrl = 'https://api.example.com/get-token'; // Replace with actual token API
+  private tokenSubject = new BehaviorSubject<string | null>(null);
+
+  // **List of APIs that require authentication**
+  private authRequiredApis = [
+    'https://api.example.com/projects',
+    'https://api.example.com/users',
+    'https://api.example.com/tasks',
+  ];
+
+  constructor() {
+    this.refreshTokenPeriodically();
+  }
+
+  // **Fetch new token**
+  private fetchToken(): Observable<string> {
+    return this.http.post<string>(this.tokenUrl, { username: 'user', password: 'pass' });
+  }
+
+  // **Automatically refresh token every 3 minutes**
+  private refreshTokenPeriodically() {
+    this.fetchToken().subscribe((token) => this.tokenSubject.next(token));
+
+    timer(0, 180000) // Refresh every 3 minutes (180000 ms)
+      .pipe(switchMap(() => this.fetchToken()))
+      .subscribe((token) => this.tokenSubject.next(token));
+  }
+
+  // **Get the latest token**
+  getToken(): Observable<string | null> {
+    return this.tokenSubject.asObservable();
+  }
+
+  // **Interceptor: Apply token only for APIs in `authRequiredApis`**
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (!this.authRequiredApis.some((api) => req.url.includes(api))) {
+      return next.handle(req); // Skip modifying other APIs
+    }
+
+    return this.getToken().pipe(
+      switchMap((token) => {
+        if (!token) return next.handle(req); // Proceed if no token
+
+        // Clone request & add Authorization + Custom Headers
+        const authReq = req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`,
+            'Custom-Header': 'SomeValue', // Modify as needed
+          },
+        });
+
+        return next.handle(authReq);
       })
     );
   }
-
-  onProjectChange(project: Project): void {
-    this.projectSubject.next(project); // Update selected project
-    console.log('Selected Project:', project);
-  }
 }
 
 
+______
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { AppComponent } from './app/app.component';
+import { AuthService } from './app/services/auth.service';
 
-<mat-form-field appearance="outline" class="custom-select">
-  <mat-label>Select Project</mat-label>
-  <mat-select [value]="(selectedProject$ | async)" (selectionChange)="onProjectChange($event.value)">
-    <mat-option *ngFor="let project of (projects$ | async)" [value]="project">
-      {{ project.projectName }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
-
-
-.custom-select {
-  width: 250px !important;
-  height: 40px !important;
-  margin-right: 16px;
-}
-
-::ng-deep .mat-select-trigger {
-  min-height: 40px !important;
-  font-size: 14px !important;
-}
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideHttpClient(withInterceptors([AuthService])) // Register AuthService Interceptor
+  ],
+}).catch((err) => console.error(err));
 
 
