@@ -1,104 +1,41 @@
 
-import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { rxResource } from '@angular/core/rxjs-interop';
+
+import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { resource, rxResource } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 
-interface DbgViewListRequestPayload {
-  DBProject: string;
-  ProgramNm: string;
-  ValidationTypeNm: string;
-}
-
-interface DbgViewList {
-  Lid: number;
-  RefRef: number;
-  Fname: string;
-  Loc: string;
-  Count1: number;
-  Count2: number;
-  Count3: number;
-  Count4: number;
-  SLibk: string;
-}
-
-interface ProjectMetaData {
-  PId: number;
-  Pname: string;
-  PgName: string;
-  Url: string;
-}
+import { ProjectMetaData, debugViewListRequestPayload, debugViewList } from '../models/debug-view.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DbgViewService {
-  private http = inject(HttpClient);
-  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+export class DebugViewService {
+  private apiBaseUrl = 'https://your-api-endpoint.com'; // Replace with your actual API base URL
 
-  getDbgViewList(requestPayload: DbgViewListRequestPayload): Observable<DbgViewList[]> {
-    const url = `api/dbg-view/run`;
-    return this.http.post<DbgViewList[]>(url, requestPayload, { headers: this.headers });
-  }
+  // Signal to store API responses
+  projectMetadataSignal = signal<ProjectMetaData | null>(null);
+  debugViewListSignal = signal<debugViewList[]>([]);
 
-  getProjectMetaData(): Observable<ProjectMetaData[]> {
-    const url = `api/project-metadata`;
-    return this.http.get<ProjectMetaData[]>(url);
-  }
-}
-
-======
-
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { DbgViewService } from './dbg-view.service';
-import { resource, rxResource } from '@angular/core/rxjs-interop';
-
-interface ProjectMetaData {
-  PId: number;
-  Pname: string;
-  PgName: string;
-  Url: string;
-}
-
-interface DbgViewList {
-  Lid: number;
-  RefRef: number;
-  Fname: string;
-  Loc: string;
-  Count1: number;
-  Count2: number;
-  Count3: number;
-  Count4: number;
-  SLibk: string;
-}
-
-@Component({
-  selector: 'app-dbg-view',
-  templateUrl: './dbg-view.component.html',
-  styleUrls: ['./dbg-view.component.css'],
-})
-export class DbgViewComponent implements OnInit {
-  private dbgViewService = inject(DbgViewService);
-
-  // Signals
-  metaDataList$ = rxResource(() => this.dbgViewService.getProjectMetaData());
-  selectedMetaProject = signal<ProjectMetaData | null>(null);
-  
-  // Resource for DbgViewList with a request & loader
-  dbgListData = resource(
-    (metaData) => this.dbgViewService.getDbgViewList(metaData), 
-    { request: this.selectedMetaProject, loader: [] }
+  // Fetch Project Metadata (GET API)
+  projectMetadata$ = rxResource<ProjectMetaData>(() =>
+    this.http.get<ProjectMetaData>(`${this.apiBaseUrl}/project-metadata`)
   );
 
-  ngOnInit() {
-    this.metaDataList$.subscribe((metadataProjects) => {
-      if (metadataProjects.length > 0) {
-        this.selectedMetaProject.set(metadataProjects[0]);
-      }
-    });
+  // Fetch Debug View List (POST API)
+  fetchDebugViewList(payload: debugViewListRequestPayload): Observable<debugViewList[]> {
+    return this.http.post<debugViewList[]>(`${this.apiBaseUrl}/debug-view-list`, payload);
   }
 
-  onProjectSelect(metaData: ProjectMetaData) {
-    this.selectedMetaProject.set(metaData);
+  constructor(private http: HttpClient) {}
+
+  loadProjectMetadata() {
+    this.projectMetadata$.request(); // Trigger resource fetch
+  }
+
+  loadDebugViewList(payload: debugViewListRequestPayload) {
+    this.fetchDebugViewList(payload).subscribe((data) => {
+      this.debugViewListSignal.set(data);
+    });
   }
 }
