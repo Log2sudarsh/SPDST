@@ -1,41 +1,60 @@
 
-
-import { Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { resource, rxResource } from '@angular/core/rxjs-interop';
+import { Injectable, inject, Signal, signal } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { resource, rxResource } from '@angular/core/rxjs-interop';
 
-import { ProjectMetaData, debugViewListRequestPayload, debugViewList } from '../models/debug-view.model';
+interface ProjectMetaData {
+  PId: number;
+  Pname: string;
+  PgName: string;
+  Url: string;
+}
+
+interface DbgViewList {
+  Lid: number;
+  RefRef: number;
+  Fname: string;
+  Loc: string;
+  Count1: number;
+  Count2: number;
+  Count3: number;
+  Count4: number;
+  SLibk: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
-export class DebugViewService {
-  private apiBaseUrl = 'https://your-api-endpoint.com'; // Replace with your actual API base URL
+export class DbgViewService {
+  private http = inject(HttpClient);
+  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  // Signal to store API responses
-  projectMetadataSignal = signal<ProjectMetaData | null>(null);
-  debugViewListSignal = signal<debugViewList[]>([]);
-
-  // Fetch Project Metadata (GET API)
-  projectMetadata$ = rxResource<ProjectMetaData>(() =>
-    this.http.get<ProjectMetaData>(`${this.apiBaseUrl}/project-metadata`)
-  );
-
-  // Fetch Debug View List (POST API)
-  fetchDebugViewList(payload: debugViewListRequestPayload): Observable<debugViewList[]> {
-    return this.http.post<debugViewList[]>(`${this.apiBaseUrl}/debug-view-list`, payload);
+  // ✅ Fetch Project Metadata (Dropdown Data)
+  getProjectMetaData(): Observable<ProjectMetaData[]> {
+    return this.http.get<ProjectMetaData[]>('https://api.example.com/project-metadata');
   }
 
-  constructor(private http: HttpClient) {}
-
-  loadProjectMetadata() {
-    this.projectMetadata$.request(); // Trigger resource fetch
+  // ✅ Fetch Debug View List based on Project ID
+  getDbgViewList(projectId: number): Observable<DbgViewList[]> {
+    return this.http.get<DbgViewList[]>(`https://api.example.com/dbg-view/${projectId}`);
   }
 
-  loadDebugViewList(payload: debugViewListRequestPayload) {
-    this.fetchDebugViewList(payload).subscribe((data) => {
-      this.debugViewListSignal.set(data);
-    });
+  // ✅ Signal for selected project (reactive binding)
+  selectedProjectId = signal<number | null>(null);
+
+  // ✅ Project Metadata List (for dropdown)
+  metaDataList$ = rxResource<ProjectMetaData[], unknown>(() => this.getProjectMetaData());
+
+  // ✅ Debug View List (updates when selectedProjectId changes)
+  dbgListData = resource<DbgViewList[], number>({
+    request: this.selectedProjectId,
+    loader: (id) => this.getDbgViewList(id),
+    loaderInitialValue: [],
+  });
+
+  // ✅ Method to update selected project ID (Triggers DebugView API)
+  updateProjectId(newId: number) {
+    this.selectedProjectId.set(newId);
   }
 }
