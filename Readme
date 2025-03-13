@@ -2,25 +2,103 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { dbgViewList, dbgViewListRequestPayload } from './models';
+import { Observable } from 'rxjs';
+
+interface DbgViewListRequestPayload {
+  DBProject: string;
+  ProgramNm: string;
+  ValidationTypeNm: string;
+}
+
+interface DbgViewList {
+  Lid: number;
+  RefRef: number;
+  Fname: string;
+  Loc: string;
+  Count1: number;
+  Count2: number;
+  Count3: number;
+  Count4: number;
+  SLibk: string;
+}
+
+interface ProjectMetaData {
+  PId: number;
+  Pname: string;
+  PgName: string;
+  Url: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class DbgViewService {
+  private http = inject(HttpClient);
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  private http = inject(HttpClient);
+  getDbgViewList(requestPayload: DbgViewListRequestPayload): Observable<DbgViewList[]> {
+    const url = `api/dbg-view/run`;
+    return this.http.post<DbgViewList[]>(url, requestPayload, { headers: this.headers });
+  }
 
-  // Using rxResource with request & loader
-  dbgViewResource = rxResource<dbgViewList[], dbgViewListRequestPayload>({
-    request: signal<dbgViewListRequestPayload | null>(null), // Stores the current request payload
-    loader: (payload) =>
-      this.http.post<dbgViewList[]>('api/dbg-view/run', payload, { headers: this.headers }),
-  });
+  getProjectMetaData(): Observable<ProjectMetaData[]> {
+    const url = `api/project-metadata`;
+    return this.http.get<ProjectMetaData[]>(url);
+  }
+}
 
-  // Function to trigger API call
-  getDbgViewList(payload: dbgViewListRequestPayload) {
-    this.dbgViewResource.update(payload); // This updates the request and triggers the loader
+======
+
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { DbgViewService } from './dbg-view.service';
+import { resource, rxResource } from '@angular/core/rxjs-interop';
+
+interface ProjectMetaData {
+  PId: number;
+  Pname: string;
+  PgName: string;
+  Url: string;
+}
+
+interface DbgViewList {
+  Lid: number;
+  RefRef: number;
+  Fname: string;
+  Loc: string;
+  Count1: number;
+  Count2: number;
+  Count3: number;
+  Count4: number;
+  SLibk: string;
+}
+
+@Component({
+  selector: 'app-dbg-view',
+  templateUrl: './dbg-view.component.html',
+  styleUrls: ['./dbg-view.component.css'],
+})
+export class DbgViewComponent implements OnInit {
+  private dbgViewService = inject(DbgViewService);
+
+  // Signals
+  metaDataList$ = rxResource(() => this.dbgViewService.getProjectMetaData());
+  selectedMetaProject = signal<ProjectMetaData | null>(null);
+  
+  // Resource for DbgViewList with a request & loader
+  dbgListData = resource(
+    (metaData) => this.dbgViewService.getDbgViewList(metaData), 
+    { request: this.selectedMetaProject, loader: [] }
+  );
+
+  ngOnInit() {
+    this.metaDataList$.subscribe((metadataProjects) => {
+      if (metadataProjects.length > 0) {
+        this.selectedMetaProject.set(metadataProjects[0]);
+      }
+    });
+  }
+
+  onProjectSelect(metaData: ProjectMetaData) {
+    this.selectedMetaProject.set(metaData);
   }
 }
