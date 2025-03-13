@@ -1,60 +1,86 @@
 
-import { Injectable, inject, Signal, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { resource, rxResource } from '@angular/core/rxjs-interop';
 
-interface ProjectMetaData {
-  PId: number;
-  Pname: string;
-  PgName: string;
-  Url: string;
-}
+import { Injectable, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { HttpClient } from '@angular/common/http';
 
-interface DbgViewList {
-  Lid: number;
-  RefRef: number;
-  Fname: string;
+export interface DbgView {
+  Id: number;
+  RefNum: number;
+  FirmNm: string;
   Loc: string;
   Count1: number;
   Count2: number;
-  Count3: number;
-  Count4: number;
-  SLibk: string;
+}
+
+export interface Payload {
+  PrjId: string;
+  PgName: string;
+  Vtype: string;
+}
+
+export interface ProjMetaData {
+  ProjNm: string;
+  AutoId: string;
+  Url: string;
+  ProdNm: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class DbgViewService {
-  private http = inject(HttpClient);
-  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+export class ProjectService {
+  private baseUrl = 'https://api.example.com'; // Replace with actual API URL
 
-  // ✅ Fetch Project Metadata (Dropdown Data)
-  getProjectMetaData(): Observable<ProjectMetaData[]> {
-    return this.http.get<ProjectMetaData[]>('https://api.example.com/project-metadata');
+  // Reactive resources for storing data
+  projMetaData = rxResource<ProjMetaData[]>([]); // List for dropdown
+  dbgViewData = rxResource<DbgView[]>([]); // DataGrid data
+
+  constructor(private http: HttpClient) {}
+
+  // Fetch project metadata for dropdown (No input required)
+  fetchProjMetaData() {
+    this.http.get<ProjMetaData[]>(`${this.baseUrl}/projectMetadata`).subscribe((data) => {
+      this.projMetaData.set(data);
+    });
   }
 
-  // ✅ Fetch Debug View List based on Project ID
-  getDbgViewList(projectId: number): Observable<DbgViewList[]> {
-    return this.http.get<DbgViewList[]>(`https://api.example.com/dbg-view/${projectId}`);
+  // Fetch DbgView data using POST request
+  fetchDbgViewData(payload: Payload) {
+    this.http.post<DbgView[]>(`${this.baseUrl}/dbgViewData`, payload).subscribe((data) => {
+      this.dbgViewData.set(data);
+    });
   }
+}
 
-  // ✅ Signal for selected project (reactive binding)
-  selectedProjectId = signal<number | null>(null);
 
-  // ✅ Project Metadata List (for dropdown)
-  metaDataList$ = rxResource<ProjectMetaData[], unknown>(() => this.getProjectMetaData());
+import { Component, effect, signal } from '@angular/core';
+import { ProjectService, Payload } from '../services/project.service';
 
-  // ✅ Debug View List (updates when selectedProjectId changes)
-  dbgListData = resource<DbgViewList[], number>({
-    request: this.selectedProjectId,
-    loader: (id) => this.getDbgViewList(id),
-    loaderInitialValue: [],
-  });
+@Component({
+  selector: 'app-project',
+  templateUrl: './project.component.html',
+  styleUrls: ['./project.component.css'],
+})
+export class ProjectComponent {
+  projMetaData = this.projectService.projMetaData; // Dropdown data
+  dbgViewData = this.projectService.dbgViewData; // DataGrid data
+  selectedProject = signal<string | null>(null); // Holds selected project ID
 
-  // ✅ Method to update selected project ID (Triggers DebugView API)
-  updateProjectId(newId: number) {
-    this.selectedProjectId.set(newId);
+  constructor(private projectService: ProjectService) {
+    // Load Project Metadata on component init
+    this.projectService.fetchProjMetaData();
+
+    // Effect: Fetch dbgViewData when selectedProject changes
+    effect(() => {
+      if (this.selectedProject()) {
+        const payload: Payload = {
+          PrjId: this.selectedProject()!,
+          PgName: 'SomePage', // Static, modify as needed
+          Vtype: 'SomeType', // Static, modify as needed
+        };
+        this.projectService.fetchDbgViewData(payload);
+      }
+    });
   }
 }
