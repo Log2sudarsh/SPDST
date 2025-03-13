@@ -1,86 +1,28 @@
 
-
 import { Injectable, signal } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
 
-export interface DbgView {
-  Id: number;
-  RefNum: number;
-  FirmNm: string;
-  Loc: string;
-  Count1: number;
-  Count2: number;
-}
-
-export interface Payload {
-  PrjId: string;
-  PgName: string;
-  Vtype: string;
-}
-
-export interface ProjMetaData {
-  ProjNm: string;
-  AutoId: string;
-  Url: string;
-  ProdNm: string;
+export interface ProjectMetaData {
+  projectName: string;
+  autId: number;
+  url?: string;
+  sourceType?: string;
+  tstRef?: string;
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class ProjectService {
-  private baseUrl = 'https://api.example.com'; // Replace with actual API URL
+export class ProjectMetaDataService {
+  private apiUrl = 'https://your-api-endpoint/projectmetadata';  // Replace with actual API
 
-  // Reactive resources for storing data
-  projMetaData = rxResource<ProjMetaData[]>([]); // List for dropdown
-  dbgViewData = rxResource<DbgView[]>([]); // DataGrid data
+  projectMetaData = signal<ProjectMetaData | null>(null);
 
   constructor(private http: HttpClient) {}
 
-  // Fetch project metadata for dropdown (No input required)
-  fetchProjMetaData() {
-    this.http.get<ProjMetaData[]>(`${this.baseUrl}/projectMetadata`).subscribe((data) => {
-      this.projMetaData.set(data);
-    });
-  }
-
-  // Fetch DbgView data using POST request
-  fetchDbgViewData(payload: Payload) {
-    this.http.post<DbgView[]>(`${this.baseUrl}/dbgViewData`, payload).subscribe((data) => {
-      this.dbgViewData.set(data);
-    });
-  }
-}
-
-
-import { Component, effect, signal } from '@angular/core';
-import { ProjectService, Payload } from '../services/project.service';
-
-@Component({
-  selector: 'app-project',
-  templateUrl: './project.component.html',
-  styleUrls: ['./project.component.css'],
-})
-export class ProjectComponent {
-  projMetaData = this.projectService.projMetaData; // Dropdown data
-  dbgViewData = this.projectService.dbgViewData; // DataGrid data
-  selectedProject = signal<string | null>(null); // Holds selected project ID
-
-  constructor(private projectService: ProjectService) {
-    // Load Project Metadata on component init
-    this.projectService.fetchProjMetaData();
-
-    // Effect: Fetch dbgViewData when selectedProject changes
-    effect(() => {
-      if (this.selectedProject()) {
-        const payload: Payload = {
-          PrjId: this.selectedProject()!,
-          PgName: 'SomePage', // Static, modify as needed
-          Vtype: 'SomeType', // Static, modify as needed
-        };
-        this.projectService.fetchDbgViewData(payload);
-      }
+  fetchProjectMetaData(): void {
+    this.http.get<ProjectMetaData>(this.apiUrl).subscribe((data) => {
+      this.projectMetaData.set(data);
     });
   }
 }
