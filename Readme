@@ -1,60 +1,4 @@
 
-import { Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-export interface ProjectMetaData {
-  projectName: string;
-  autId: number;
-  url?: string;
-  sourceType?: string;
-  tstRef?: string;
-}
-
-export interface DbgList {
-  Launchid: number;
-  TstRefNo: number;
-  FirmwareNm: string;
-  Loc: string;
-  Type: string;
-  Mplan: string;
-  LaunchType: string;
-  count1: number;
-  count2: number;
-  count3: number;
-}
-
-@Injectable({
-  providedIn: 'root'
-})
-export class ApiService {
-  private projectApiUrl = 'https://your-api-endpoint/projectmetadata'; // Replace with actual API
-  private dbgApiUrl = 'https://your-api-endpoint/dbglist'; // Replace with actual API
-
-  projectMetaDataList = signal<ProjectMetaData[]>([]);
-  selectedProject = signal<ProjectMetaData | null>(null);
-  dbgList = signal<DbgList[]>([]);
-
-  constructor(private http: HttpClient) {}
-
-  fetchProjectMetaData(): void {
-    this.http.get<ProjectMetaData[]>(this.projectApiUrl).subscribe((data) => {
-      this.projectMetaDataList.set(data);
-    });
-  }
-
-  fetchDbgList(autId: number): void {
-    this.http.get<DbgList[]>(`${this.dbgApiUrl}?autId=${autId}`).subscribe((data) => {
-      this.dbgList.set(data);
-    });
-  }
-
-  selectProject(project: ProjectMetaData) {
-    this.selectedProject.set(project);
-    this.fetchDbgList(project.autId); // Fetch Debug List based on selected project
-  }
-}
-____________
-
 import { Component, Signal, inject } from '@angular/core';
 import { ApiService, ProjectMetaData, DbgList } from './services/api.service';
 
@@ -71,7 +15,7 @@ export class AppComponent {
   dbgList: Signal<DbgList[]> = this.apiService.dbgList;
 
   constructor() {
-    this.apiService.fetchProjectMetaData(); // Load projects on component initialization
+    this.apiService.fetchProjectMetaData(); // Fetch projects on component initialization
   }
 
   onProjectChange(project: ProjectMetaData) {
