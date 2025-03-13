@@ -12,21 +12,15 @@ export class DbgViewService {
 
   private http = inject(HttpClient);
 
-  // Declare request signal (stores the latest API request payload)
-  request = signal<dbgViewListRequestPayload | null>(null);
-
-  // Declare loader function (makes the actual API call)
-  loader = (payload: dbgViewListRequestPayload) =>
-    this.http.post<dbgViewList[]>('api/dbg-view/run', payload, { headers: this.headers });
-
-  // Use rxResource and reference request & loader
+  // Using rxResource with request & loader
   dbgViewResource = rxResource<dbgViewList[], dbgViewListRequestPayload>({
-    request: this.request,
-    loader: this.loader,
+    request: signal<dbgViewListRequestPayload | null>(null), // Stores the current request payload
+    loader: (payload) =>
+      this.http.post<dbgViewList[]>('api/dbg-view/run', payload, { headers: this.headers }),
   });
 
-  // Function to update request and trigger API call
+  // Function to trigger API call
   getDbgViewList(payload: dbgViewListRequestPayload) {
-    this.request.set(payload); // Updating request automatically triggers the API call
+    this.dbgViewResource.update(payload); // This updates the request and triggers the loader
   }
 }
