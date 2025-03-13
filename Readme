@@ -1,17 +1,72 @@
 
-.mat-form-field {
-  margin-bottom: 16px; /* ✅ Adds spacing between dropdown and DataGrid */
-  width: 200px; /* ✅ Makes select dropdown smaller */
+import { Injectable, signal, computed } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { RxResource, resource, request, loader } from '@ngrx/resource';
+import { of } from 'rxjs';
+
+interface ProjectMetaData {
+  PId: number;
+  Pname: string;
+  PgName: string;
+  Url: string;
 }
 
-.mat-select {
-  font-size: 12px !important; /* ✅ Reduce font size */
+interface dbgViewListRequestPayload {
+  DBProject: string;
+  ProgramNm: string;
+  ValidationTypeNm: string;
 }
 
-.mat-option {
-  font-size: 12px !important; /* ✅ Reduce font size inside dropdown options */
+interface dbgViewList {
+  Lid: number;
+  RefRef: number;
+  Fname: string;
+  Loc: string;
+  Count1: number;
+  Count2: number;
+  Count3: number;
+  Count4: number;
+  SLibk: string;
 }
 
-.mat-form-field-wrapper {
-  padding-bottom: 0px !important; /* ✅ Removes extra padding */
+@Injectable({
+  providedIn: 'root',
+})
+export class DbgViewService {
+  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+  // Hardcoded project metadata
+  private projectMetaData: ProjectMetaData[] = [
+    { PId: 1, Pname: 'Project A', PgName: 'Module A', Url: 'http://example.com/a' },
+    { PId: 2, Pname: 'Project B', PgName: 'Module B', Url: 'http://example.com/b' },
+    { PId: 3, Pname: 'Project C', PgName: 'Module C', Url: 'http://example.com/c' },
+  ];
+
+  // RxResource to manage project metadata state
+  projectMetaResource = resource<ProjectMetaData[]>({
+    data: signal<ProjectMetaData[]>([]), // Signal to hold data
+    request: request(() => of(this.projectMetaData)), // Hardcoded data request
+    loader: loader(), // Tracks loading state
+  });
+
+  // RxResource for dbgViewList
+  dbgViewResource = resource<dbgViewList[], dbgViewListRequestPayload>({
+    data: signal<dbgViewList[]>([]),
+    request: request((payload: dbgViewListRequestPayload) =>
+      this.http.post<dbgViewList[]>('api/dbg-view/run', payload, { headers: this.headers })
+    ),
+    loader: loader(),
+  });
+
+  constructor(private http: HttpClient) {}
+
+  // Load project metadata
+  fetchProjectMetaData() {
+    this.projectMetaResource.load();
+  }
+
+  // Fetch debug view list
+  fetchDbgViewList(payload: dbgViewListRequestPayload) {
+    this.dbgViewResource.load(payload);
+  }
 }
