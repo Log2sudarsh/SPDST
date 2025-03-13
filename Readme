@@ -1,8 +1,7 @@
 
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
 import { dbgViewList, dbgViewListRequestPayload } from './models';
 
 @Injectable({
@@ -11,18 +10,15 @@ import { dbgViewList, dbgViewListRequestPayload } from './models';
 export class DbgViewService {
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  // Resource for Debug View List
-  dbgViewResource = rxResource<dbgViewList[], dbgViewListRequestPayload>({
-    fetcher: (payload) =>
-      this.http.post<dbgViewList[]>('api/dbg-view/run', payload, {
-        headers: this.headers,
-      }),
-  });
+  private http = inject(HttpClient); // Correct way to inject HttpClient
 
-  constructor(private http: HttpClient) {}
+  // Corrected rxResource implementation
+  dbgViewResource = rxResource<dbgViewList[], dbgViewListRequestPayload>((payload) =>
+    this.http.post<dbgViewList[]>('api/dbg-view/run', payload, { headers: this.headers })
+  );
 
-  // Fetch Debug View List
+  // Function to trigger API call
   getDbgViewList(payload: dbgViewListRequestPayload) {
-    return this.dbgViewResource.fetch(payload);
+    this.dbgViewResource.get(payload);
   }
 }
