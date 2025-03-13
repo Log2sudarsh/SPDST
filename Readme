@@ -1,5 +1,5 @@
 
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { dbgViewList, dbgViewListRequestPayload } from './models';
@@ -10,15 +10,23 @@ import { dbgViewList, dbgViewListRequestPayload } from './models';
 export class DbgViewService {
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  private http = inject(HttpClient); // Correct way to inject HttpClient
+  private http = inject(HttpClient);
 
-  // Corrected rxResource implementation
-  dbgViewResource = rxResource<dbgViewList[], dbgViewListRequestPayload>((payload) =>
-    this.http.post<dbgViewList[]>('api/dbg-view/run', payload, { headers: this.headers })
-  );
+  // Declare request signal (stores the latest API request payload)
+  request = signal<dbgViewListRequestPayload | null>(null);
 
-  // Function to trigger API call
+  // Declare loader function (makes the actual API call)
+  loader = (payload: dbgViewListRequestPayload) =>
+    this.http.post<dbgViewList[]>('api/dbg-view/run', payload, { headers: this.headers });
+
+  // Use rxResource and reference request & loader
+  dbgViewResource = rxResource<dbgViewList[], dbgViewListRequestPayload>({
+    request: this.request,
+    loader: this.loader,
+  });
+
+  // Function to update request and trigger API call
   getDbgViewList(payload: dbgViewListRequestPayload) {
-    this.dbgViewResource.get(payload);
+    this.request.set(payload); // Updating request automatically triggers the API call
   }
 }
