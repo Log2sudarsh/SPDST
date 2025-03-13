@@ -1,33 +1,9 @@
 
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { RxResource, resource, request, loader } from '@ngrx/resource';
-import { of } from 'rxjs';
-
-interface ProjectMetaData {
-  PId: number;
-  Pname: string;
-  PgName: string;
-  Url: string;
-}
-
-interface dbgViewListRequestPayload {
-  DBProject: string;
-  ProgramNm: string;
-  ValidationTypeNm: string;
-}
-
-interface dbgViewList {
-  Lid: number;
-  RefRef: number;
-  Fname: string;
-  Loc: string;
-  Count1: number;
-  Count2: number;
-  Count3: number;
-  Count4: number;
-  SLibk: string;
-}
+import { rxResource } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
+import { dbgViewList, dbgViewListRequestPayload } from './models';
 
 @Injectable({
   providedIn: 'root',
@@ -35,38 +11,18 @@ interface dbgViewList {
 export class DbgViewService {
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  // Hardcoded project metadata
-  private projectMetaData: ProjectMetaData[] = [
-    { PId: 1, Pname: 'Project A', PgName: 'Module A', Url: 'http://example.com/a' },
-    { PId: 2, Pname: 'Project B', PgName: 'Module B', Url: 'http://example.com/b' },
-    { PId: 3, Pname: 'Project C', PgName: 'Module C', Url: 'http://example.com/c' },
-  ];
-
-  // RxResource to manage project metadata state
-  projectMetaResource = resource<ProjectMetaData[]>({
-    data: signal<ProjectMetaData[]>([]), // Signal to hold data
-    request: request(() => of(this.projectMetaData)), // Hardcoded data request
-    loader: loader(), // Tracks loading state
-  });
-
-  // RxResource for dbgViewList
-  dbgViewResource = resource<dbgViewList[], dbgViewListRequestPayload>({
-    data: signal<dbgViewList[]>([]),
-    request: request((payload: dbgViewListRequestPayload) =>
-      this.http.post<dbgViewList[]>('api/dbg-view/run', payload, { headers: this.headers })
-    ),
-    loader: loader(),
+  // Resource for Debug View List
+  dbgViewResource = rxResource<dbgViewList[], dbgViewListRequestPayload>({
+    fetcher: (payload) =>
+      this.http.post<dbgViewList[]>('api/dbg-view/run', payload, {
+        headers: this.headers,
+      }),
   });
 
   constructor(private http: HttpClient) {}
 
-  // Load project metadata
-  fetchProjectMetaData() {
-    this.projectMetaResource.load();
-  }
-
-  // Fetch debug view list
-  fetchDbgViewList(payload: dbgViewListRequestPayload) {
-    this.dbgViewResource.load(payload);
+  // Fetch Debug View List
+  getDbgViewList(payload: dbgViewListRequestPayload) {
+    return this.dbgViewResource.fetch(payload);
   }
 }
