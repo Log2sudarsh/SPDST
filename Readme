@@ -2,27 +2,33 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-export interface ProjectMetaData {
-  projectName: string;
-  autId: number;
-  url?: string;
-  sourceType?: string;
-  tstRef?: string;
+export interface DbgList {
+  Launchid: number;
+  TstRefNo: number;
+  FirmwareNm: string;
+  Loc: string;
+  Type: string;
+  Mplan: string;
+  LaunchType: string;
+  count1: number;
+  count2: number;
+  count3: number;
 }
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProjectMetaDataService {
-  private apiUrl = 'https://your-api-endpoint/projectmetadata';  // Replace with actual API
+export class DbgListService {
+  private apiUrl = 'https://your-api-endpoint/dbglist'; // Replace with actual API
 
-  projectMetaData = signal<ProjectMetaData | null>(null);
+  dbgList = signal<DbgList[]>([]);
 
   constructor(private http: HttpClient) {}
 
-  fetchProjectMetaData(): void {
-    this.http.get<ProjectMetaData>(this.apiUrl).subscribe((data) => {
-      this.projectMetaData.set(data);
+  fetchDbgList(): void {
+    this.http.get<DbgList[]>(this.apiUrl).subscribe((data) => {
+      this.dbgList.set(data);
     });
   }
 }
+
