@@ -1,1 +1,121 @@
 
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { DebugViewComponent } from './debug-view.component';
+import { DebugViewService } from '../../services/debug-view.service';
+import { of } from 'rxjs';
+import { DxDataGridModule } from 'devextreme-angular';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { ProjectMetaData, debugViewList, debugViewListRequestPayload } from '../../models/debug-view-types';
+
+describe('DebugViewComponent (Jest)', () => {
+  let component: DebugViewComponent;
+  let fixture: ComponentFixture<DebugViewComponent>;
+  let debugServiceMock: jest.Mocked<DebugViewService>;
+
+  beforeEach(async () => {
+    debugServiceMock = {
+      getProjMetaData: jest.fn(),
+      getDebugViewData: jest.fn(),
+    } as unknown as jest.Mocked<DebugViewService>;
+
+    await TestBed.configureTestingModule({
+      declarations: [DebugViewComponent],
+      imports: [
+        DxDataGridModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatInputModule,
+        FormsModule,
+        MatTooltipModule,
+        MatIconModule
+      ],
+      providers: [
+        { provide: DebugViewService, useValue: debugServiceMock }
+      ]
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(DebugViewComponent);
+    component = fixture.componentInstance;
+  });
+
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should initialize project metadata and set default project', () => {
+    const mockMetaData: ProjectMetaData[] = [
+      { projectName: 'TestProject', programNm: 'TestProgram', validationTypeNm: 'TestValidation' }
+    ];
+    debugServiceMock.getProjMetaData.mockReturnValue(of(mockMetaData));
+
+    component.ngOnInit();
+
+    expect(debugServiceMock.getProjMetaData).toHaveBeenCalled();
+    expect(component.ProjMetaData()).toEqual(mockMetaData);
+    expect(component.selectedProject()).toEqual({
+      DBProject: 'TestProject',
+      Programm: 'TestProgram',
+      ValidationTypeNm: 'TestValidation'
+    });
+  });
+
+  it('should fetch debug view data', () => {
+    const mockData: debugViewList[] = [{ /* mock debug data */ }];
+    component.debugViewDatSource = { value: () => mockData } as any;
+
+    component.fetchDebugViewData();
+
+    expect(component.debugViewData()).toEqual(mockData);
+  });
+
+  it('should update selected project on metadata change', () => {
+    const newMetaData: ProjectMetaData = {
+      projectName: 'NewProject',
+      programNm: 'NewProgram',
+      validationTypeNm: 'NewValidation'
+    };
+
+    component.onMetaDataChange(newMetaData);
+
+    expect(component.selectedProject()).toEqual({
+      DBProject: 'NewProject',
+      ProgramNm: 'NewProgram',
+      ValidationTypeNm: 'NewValidation'
+    });
+  });
+
+  it('should open external link when openStarLink is called', () => {
+    const spy = jest.spyOn(window, 'open').mockImplementation(() => null);
+    component.openStarLink('http://example.com');
+    expect(spy).toHaveBeenCalledWith('http://example.com', '_blank');
+    spy.mockRestore();
+  });
+
+  it('should open summary link when openFaSummeryLink is called', () => {
+    const spy = jest.spyOn(window, 'open').mockImplementation(() => null);
+    component.openFaSummeryLink(123);
+    expect(spy).toHaveBeenCalledWith('app/fa-view?test-run-ref=123', '_blank');
+    spy.mockRestore();
+  });
+
+  it('should export data grid on onExporting', async () => {
+    const mockEvent = { component: {} } as any;
+    const workbookMock = { xlsx: { writeBuffer: jest.fn().mockResolvedValue(new ArrayBuffer(8)) } };
+    jest.spyOn(workbookMock.xlsx, 'writeBuffer').mockResolvedValue(new ArrayBuffer(8));
+    const saveAsMock = jest.fn();
+    globalThis.saveAs = saveAsMock as any;
+
+    component.onExporting(mockEvent);
+
+    await expect(workbookMock.xlsx.writeBuffer).toHaveBeenCalled();
+    expect(saveAsMock).toHaveBeenCalled();
+  });
+});
+
