@@ -1,24 +1,59 @@
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ProjectComponent } from './project.component';
+import { ProjectService } from '../services/project.service';
+import { ProjectMetaData, DebugViewList } from '../models/project.model';
+import { of } from 'rxjs';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { DxDataGridModule } from 'devextreme-angular';
 
-import { Component, Signal, inject } from '@angular/core';
-import { ApiService, ProjectMetaData, DbgList } from './services/api.service';
+describe('ProjectComponent', () => {
+  let component: ProjectComponent;
+  let projectService: ProjectService;
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
-})
-export class AppComponent {
-  private apiService = inject(ApiService);
+  const mockProjects: ProjectMetaData[] = [
+    { projectName: 'Project A', autId: 1, url: 'https://example.com/a', sourceType: 'Type1', tstRef: 'RefA' },
+    { projectName: 'Project B', autId: 2, url: 'https://example.com/b', sourceType: 'Type2', tstRef: 'RefB' }
+  ];
 
-  projectMetaDataList: Signal<ProjectMetaData[]> = this.apiService.projectMetaDataList;
-  selectedProject: Signal<ProjectMetaData | null> = this.apiService.selectedProject;
-  dbgList: Signal<DbgList[]> = this.apiService.dbgList;
+  const mockDebugList: DebugViewList[] = [
+    { Launchid: 101, TstRefNo: 1001, FirmwareNm: 'FW1', Loc: 'Location1', count1: 10, count2: 20 },
+    { Launchid: 102, TstRefNo: 1002, FirmwareNm: 'FW2', Loc: 'Location2', count1: 15, count2: 25 }
+  ];
 
-  constructor() {
-    this.apiService.fetchProjectMetaData(); // Fetch projects on component initialization
-  }
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, MatSelectModule, MatFormFieldModule, DxDataGridModule],
+      providers: [ProjectService],
+    });
 
-  onProjectChange(project: ProjectMetaData) {
-    this.apiService.selectProject(project);
-  }
-}
+    projectService = TestBed.inject(ProjectService);
+    component = new ProjectComponent();
+  });
+
+  it('should create component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should have projects populated on load', () => {
+    expect(component.projectList()).toEqual(mockProjects);
+  });
+
+  it('should update selectedProject when a project is chosen', () => {
+    const selected = mockProjects[0];
+    component.onProjectChange(selected);
+    expect(component.selectedProject()).toEqual(selected);
+  });
+
+  it('should refresh debugViewList when project is selected', async () => {
+    jest.spyOn(projectService, 'fetchDebugViewList').mockReturnValue(of(mockDebugList));
+
+    const selected = mockProjects[0];
+    component.onProjectChange(selected);
+
+    await component.debugViewList.refresh();
+
+    expect(component.debugViewList()).toEqual(mockDebugList);
+  });
+});
