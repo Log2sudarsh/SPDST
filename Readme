@@ -1,59 +1,113 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ProjectComponent } from './project.component';
-import { ProjectService } from '../services/project.service';
-import { ProjectMetaData, DebugViewList } from '../models/project.model';
+import { DebugViewComponent } from './debug-view.component';
+import { DebugViewService } from '../../services/debug-view.service';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { DxDataGridModule } from 'devextreme-angular';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { ProjectMetaData, debugViewList, debugViewListRequestPayload } from '../../models/debug-view-types';
 
-describe('ProjectComponent', () => {
-  let component: ProjectComponent;
-  let projectService: ProjectService;
+describe('DebugViewComponent', () => {
+  let component: DebugViewComponent;
+  let fixture: ComponentFixture<DebugViewComponent>;
+  let debugServiceMock: jasmine.SpyObj<DebugViewService>;
 
-  const mockProjects: ProjectMetaData[] = [
-    { projectName: 'Project A', autId: 1, url: 'https://example.com/a', sourceType: 'Type1', tstRef: 'RefA' },
-    { projectName: 'Project B', autId: 2, url: 'https://example.com/b', sourceType: 'Type2', tstRef: 'RefB' }
-  ];
+  beforeEach(async () => {
+    debugServiceMock = jasmine.createSpyObj('DebugViewService', ['getProjMetaData', 'getDebugViewData']);
 
-  const mockDebugList: DebugViewList[] = [
-    { Launchid: 101, TstRefNo: 1001, FirmwareNm: 'FW1', Loc: 'Location1', count1: 10, count2: 20 },
-    { Launchid: 102, TstRefNo: 1002, FirmwareNm: 'FW2', Loc: 'Location2', count1: 15, count2: 25 }
-  ];
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, MatSelectModule, MatFormFieldModule, DxDataGridModule],
-      providers: [ProjectService],
-    });
-
-    projectService = TestBed.inject(ProjectService);
-    component = new ProjectComponent();
+    await TestBed.configureTestingModule({
+      declarations: [DebugViewComponent],
+      imports: [
+        DxDataGridModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatInputModule,
+        FormsModule,
+        MatTooltipModule,
+        MatIconModule
+      ],
+      providers: [
+        { provide: DebugViewService, useValue: debugServiceMock }
+      ]
+    }).compileComponents();
   });
 
-  it('should create component', () => {
+  beforeEach(() => {
+    fixture = TestBed.createComponent(DebugViewComponent);
+    component = fixture.componentInstance;
+  });
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have projects populated on load', () => {
-    expect(component.projectList()).toEqual(mockProjects);
+  it('should initialize project metadata and set default project', () => {
+    const mockMetaData: ProjectMetaData[] = [
+      { projectName: 'TestProject', programNm: 'TestProgram', validationTypeNm: 'TestValidation' }
+    ];
+    debugServiceMock.getProjMetaData.and.returnValue(of(mockMetaData));
+
+    component.ngOnInit();
+
+    expect(debugServiceMock.getProjMetaData).toHaveBeenCalled();
+    expect(component.ProjMetaData()).toEqual(mockMetaData);
+    expect(component.selectedProject()).toEqual({
+      DBProject: 'TestProject',
+      Programm: 'TestProgram',
+      ValidationTypeNm: 'TestValidation'
+    });
   });
 
-  it('should update selectedProject when a project is chosen', () => {
-    const selected = mockProjects[0];
-    component.onProjectChange(selected);
-    expect(component.selectedProject()).toEqual(selected);
+  it('should fetch debug view data', () => {
+    const mockData: debugViewList[] = [{ /* mock debug data */ }];
+    component.debugViewDatSource = { value: () => mockData } as any;
+
+    component.fetchDebugViewData();
+
+    expect(component.debugViewData()).toEqual(mockData);
   });
 
-  it('should refresh debugViewList when project is selected', async () => {
-    jest.spyOn(projectService, 'fetchDebugViewList').mockReturnValue(of(mockDebugList));
+  it('should update selected project on metadata change', () => {
+    const newMetaData: ProjectMetaData = {
+      projectName: 'NewProject',
+      programNm: 'NewProgram',
+      validationTypeNm: 'NewValidation'
+    };
 
-    const selected = mockProjects[0];
-    component.onProjectChange(selected);
+    component.onMetaDataChange(newMetaData);
 
-    await component.debugViewList.refresh();
+    expect(component.selectedProject()).toEqual({
+      DBProject: 'NewProject',
+      ProgramNm: 'NewProgram',
+      ValidationTypeNm: 'NewValidation'
+    });
+  });
 
-    expect(component.debugViewList()).toEqual(mockDebugList);
+  it('should open external link when openStarLink is called', () => {
+    const spy = spyOn(window, 'open');
+    component.openStarLink('http://example.com');
+    expect(spy).toHaveBeenCalledWith('http://example.com', '_blank');
+  });
+
+  it('should open summary link when openFaSummeryLink is called', () => {
+    const spy = spyOn(window, 'open');
+    component.openFaSummeryLink(123);
+    expect(spy).toHaveBeenCalledWith('app/fa-view?test-run-ref=123', '_blank');
+  });
+
+  it('should export data grid on onExporting', async () => {
+    const mockEvent = { component: {} } as any;
+    const workbookMock = { xlsx: { writeBuffer: jasmine.createSpy().and.returnValue(Promise.resolve(new ArrayBuffer(8))) } };
+    spyOn(workbookMock.xlsx, 'writeBuffer').and.callThrough();
+    spyOn(window, 'saveAs');
+
+    component.onExporting(mockEvent);
+
+    await expect(workbookMock.xlsx.writeBuffer).toHaveBeenCalled();
+    expect(window.saveAs).toHaveBeenCalled();
   });
 });
