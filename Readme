@@ -1,1 +1,19 @@
-npm install --save-dev jest @angular-builders/jest jest-preset-angular ts-jest @types/jest
+"jest": {
+  "preset": "jest-preset-angular",
+  "setupFilesAfterEnv": ["<rootDir>/setup-jest.ts"]
+}
+
+=================
+import 'jest-preset-angular/setup-jest';
+==-=
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["jest"],
+    "module": "commonjs"
+  }
+}
+
+
+jest --clearCache
+npm test
