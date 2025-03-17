@@ -1,0 +1,95 @@
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { DebugViewComponent } from './debug-view.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { MatSelectModule } from '@angular/material/select';
+import { DxDataGridModule } from 'devextreme-angular';
+import { DebugService } from '../services/debug.service'; // Your API service
+import { of } from 'rxjs';
+import { ProjectMetaData, dbgList } from '../models/debug.models'; // Your models
+
+describe('DebugViewComponent', () => {
+  let component: DebugViewComponent;
+  let fixture: ComponentFixture<DebugViewComponent>;
+  let debugService: DebugService;
+
+  const mockProjectList: ProjectMetaData[] = [
+    { projectName: 'Project A', autId: 1, url: 'http://example.com', sourceType: 'API', tstRef: '1234' },
+    { projectName: 'Project B', autId: 2, url: 'http://example.com', sourceType: 'API', tstRef: '5678' },
+  ];
+
+  const mockDebugList: dbgList[] = [
+    { Launchid: 101, TstRefNo: 1234, FirmwareNm: 'v1.0', Loc: 'US', count1: 10, count2: 20 },
+    { Launchid: 102, TstRefNo: 5678, FirmwareNm: 'v1.1', Loc: 'UK', count1: 15, count2: 25 },
+  ];
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [DebugViewComponent, HttpClientTestingModule, MatSelectModule, DxDataGridModule],
+      providers: [
+        DebugService, // Mock service
+        provideHttpClient(),
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(DebugViewComponent);
+    component = fixture.componentInstance;
+    debugService = TestBed.inject(DebugService);
+  });
+
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should load project list on init', () => {
+    jest.spyOn(debugService, 'getProjectList').mockReturnValue(of(mockProjectList));
+
+    component.ngOnInit();
+
+    expect(debugService.getProjectList).toHaveBeenCalled();
+    expect(component.projectList.value).toEqual(mockProjectList);
+  });
+
+  it('should update debug list when a project is selected', () => {
+    jest.spyOn(debugService, 'fetchDbgList').mockReturnValue(of(mockDebugList));
+
+    component.selectProject(mockProjectList[0]); // Selecting "Project A"
+
+    expect(debugService.fetchDbgList).toHaveBeenCalledWith(mockProjectList[0]);
+    expect(component.debugViewList.value).toEqual(mockDebugList);
+  });
+
+  it('should bind project metadata to material dropdown', () => {
+    component.projectList.set(mockProjectList);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement;
+    const dropdownOptions = compiled.querySelectorAll('mat-option');
+
+    expect(dropdownOptions.length).toBe(mockProjectList.length);
+    expect(dropdownOptions[0].textContent).toContain('Project A');
+    expect(dropdownOptions[1].textContent).toContain('Project B');
+  });
+
+  it('should bind debug data to DevExtreme Data Grid', () => {
+    component.debugViewList.set(mockDebugList);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement;
+    const gridRows = compiled.querySelectorAll('.dx-row');
+
+    expect(gridRows.length).toBe(mockDebugList.length);
+    expect(gridRows[0].textContent).toContain('v1.0');
+    expect(gridRows[1].textContent).toContain('v1.1');
+  });
+
+  it('should handle empty debug list gracefully', () => {
+    jest.spyOn(debugService, 'fetchDbgList').mockReturnValue(of([]));
+
+    component.selectProject(mockProjectList[0]);
+
+    expect(debugService.fetchDbgList).toHaveBeenCalledWith(mockProjectList[0]);
+    expect(component.debugViewList.value).toEqual([]);
+  });
+
+});
