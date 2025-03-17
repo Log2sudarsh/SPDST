@@ -1,0 +1,58 @@
+
+import { Component, OnInit, signal, rxResource } from '@angular/core';
+import { DebugService } from '../services/debug.service';
+import { debugViewList, debugViewListRequestPayload, ProjectMetaData } from '../models/debug-models';
+import { firstValueFrom } from 'rxjs';
+
+@Component({
+  selector: 'app-debug-view',
+  standalone: true,
+  templateUrl: './debug-view.component.html',
+  styleUrls: ['./debug-view.component.css'],
+})
+export class DebugViewComponent implements OnInit {
+  // Store project list in signal
+  projectList = signal<ProjectMetaData[]>([
+    { projectName: 'Project A', autId: 1, url: 'http://example.com', sourceType: 'API', tstRef: '1234' },
+    { projectName: 'Project B', autId: 2, url: 'http://example.com', sourceType: 'API', tstRef: '5678' }
+  ]);
+
+  selectedProject = signal<ProjectMetaData | null>(null);
+  debugList = signal<debugViewList[]>([]);
+
+  // rxResource to call API
+  fetchDebugList = rxResource({
+    request: signal<debugViewListRequestPayload | null>(null),
+    loader: async (payload) => {
+      if (!payload) return [];
+      return firstValueFrom(this.debugService.getDebugList(payload));
+    }
+  });
+
+  constructor(private debugService: DebugService) {}
+
+  ngOnInit() {
+    this.fetchProjectList();
+  }
+
+  fetchProjectList() {
+    // Auto-select the first project on init
+    const projects = this.projectList.value;
+    if (projects.length > 0) {
+      this.selectProject(projects[0]);
+    }
+  }
+
+  selectProject(project: ProjectMetaData) {
+    this.selectedProject.set(project);
+    const payload: debugViewListRequestPayload = { autId: project.autId, tstRef: project.tstRef };
+
+    // Fetch debug data based on selected project
+    this.fetchDebugList.request.set(payload);
+
+    // Update debugList signal dynamically
+    this.fetchDebugList.value.then((data) => {
+      this.debugList.set(data);
+    });
+  }
+}
