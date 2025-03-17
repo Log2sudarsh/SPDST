@@ -1,0 +1,90 @@
+import { Component, OnInit, signal, effect } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { DebugService } from '../services/debug.service';
+import { ProjectMetaData, debugViewList, debugViewListRequestPayload } from '../models/debug.models';
+
+@Component({
+  selector: 'app-debug-view',
+  templateUrl: './debug-view.component.html',
+  styleUrls: ['./debug-view.component.css'],
+  standalone: true,
+})
+export class DebugViewComponent implements OnInit {
+  // Store project list from API
+  projectList = signal<ProjectMetaData[]>([]);
+
+  // Store selected project (default: first project after API call)
+  selectedProject = signal<ProjectMetaData | null>(null);
+
+  // Store debug list response
+  debugList = signal<debugViewList[]>([]);
+
+  // Store request payload for API
+  payload = signal<debugViewListRequestPayload>({
+    DBProject: '',
+    ProgramNm: '',
+    ValidationTypeNm: '',
+  });
+
+  // Fetch project list API
+  fetchProjectList = rxResource({
+    request: () => null, // No payload required
+    loader: () => this.debugService.getProjectList(), // Call API
+  });
+
+  // Fetch debugViewList API
+  fetchDebugList = rxResource({
+    request: () => this.payload(),
+    loader: (request) => this.debugService.getDebugViewData(request),
+  });
+
+  constructor(private debugService: DebugService) {}
+
+  ngOnInit() {
+    // 1️⃣ Load Project Metadata API
+    this.fetchProjectList.refresh();
+
+    // 2️⃣ Update project list after API call
+    effect(() => {
+      const projects = this.fetchProjectList.value ?? [];
+      if (projects.length > 0) {
+        this.projectList.set(projects);
+        this.selectedProject.set(projects[0]); // Default selection: first project
+        this.updatePayloadAndFetchDebugList(projects[0]); // Auto-load debug list
+      }
+    });
+
+    // 3️⃣ Watch for project selection change and fetch debug list
+    effect(() => {
+      const project = this.selectedProject();
+      if (project) {
+        this.updatePayloadAndFetchDebugList(project);
+      }
+    });
+
+    // 4️⃣ Process and store debug list response
+    effect(() => {
+      const apiResponse = this.fetchDebugList.value ?? [];
+      const cleanedResponse = Array.isArray(apiResponse)
+        ? apiResponse.flat().filter(item => Object.keys(item).length > 0 && !("" in item))
+        : [];
+      this.debugList.set(cleanedResponse); // Store cleaned data
+    });
+  }
+
+  // Handle project selection change
+  selectProject(project: ProjectMetaData) {
+    this.selectedProject.set(project);
+  }
+
+  // Update payload & fetch debug list
+  private updatePayloadAndFetchDebugList(project: ProjectMetaData) {
+    this.payload.set({
+      DBProject: project.projectName,
+      ProgramNm: 'SampleProgram',
+      ValidationTypeNm: 'Type1',
+    });
+    this.fetchDebugList.refresh(); // Call API with new payload
+  }
+}
+
