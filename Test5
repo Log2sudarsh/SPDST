@@ -1,0 +1,65 @@
+import { Component, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rx-resource';
+import { DebugService } from '../services/debug.service';
+import { ProjectMetaData, debugViewList } from '../models/debug.model';
+
+@Component({
+  selector: 'app-debug-view',
+  templateUrl: './debug-view.component.html',
+  styleUrls: ['./debug-view.component.css']
+})
+export class DebugViewComponent {
+  // Hardcoded Project List
+  projectList = signal<ProjectMetaData[]>([
+    { projectName: 'Project A', autId: 1, url: 'http://example.com', sourceType: 'API', tstRef: '1234' },
+    { projectName: 'Project B', autId: 2, url: 'http://example.com', sourceType: 'API', tstRef: '5678' }
+  ]);
+
+  // Signal to store selected project
+  selectedProject = signal<ProjectMetaData | null>(null);
+
+  // Signal for API Payload
+  payload = signal<{ DBProject: string; ProgramNm: string; ValidationTypeNm: string }>({
+    DBProject: '',
+    ProgramNm: '',
+    ValidationTypeNm: ''
+  });
+
+  // Fetch Debug List using rxResource
+  fetchDebugList = rxResource({
+    request: () => this.payload(), // Send payload as input
+    loader: (request) => this.debugService.getDebugViewData(request), // API Call
+  });
+
+  // Signal to store API response
+  debugList = signal<debugViewList[]>([]);
+
+  constructor(private debugService: DebugService) {}
+
+  ngOnInit() {
+    // Load first project as default
+    this.selectedProject.set(this.projectList()[0]);
+    this.updateDebugList();
+  }
+
+  // Method to update payload and fetch debug list
+  selectProject(project: ProjectMetaData) {
+    this.selectedProject.set(project);
+
+    // Update payload dynamically
+    this.payload.set({
+      DBProject: project.projectName,
+      ProgramNm: project.sourceType ?? '',
+      ValidationTypeNm: project.tstRef ?? ''
+    });
+
+    // Fetch Debug List
+    this.updateDebugList();
+  }
+
+  // Fetch Debug List from API and store in signal
+  updateDebugList() {
+    this.fetchDebugList.refresh(); // Trigger API call
+    this.debugList.set(this.fetchDebugList.value ?? []); // ✅ Store API response in signal
+  }
+}
