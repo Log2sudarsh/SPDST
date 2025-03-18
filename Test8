@@ -1,0 +1,29 @@
+
+### Debug Listing Page Overview  
+
+The **Debug Listing Page** provides an interactive interface to view and manage debug data efficiently. Below are the key features and functionalities of the page:  
+
+1. **Project Selection Dropdown**  
+   - At the top of the page, a dropdown list displays available **meta-data projects**.  
+   - By default, the **first project** in the list is selected.  
+
+2. **Data Grid Display**  
+   - The grid updates dynamically based on the **selected project**, displaying the corresponding debug list data.  
+
+3. **Grid Functionalities**  
+   - **Global Search**: A search bar above the grid allows users to find any value within the displayed data.  
+   - **Column Chooser**: Users can customize the grid view by selecting or deselecting columns.  
+   - **Export to Excel**: Data can be exported in Excel format for further analysis.  
+   - **Sorting by Milestone Plan**: Data can be sorted based on milestone plan values.  
+
+4. **Grid Header Options**  
+   - Each column in the grid provides options for **sorting**, **filtering**, and **searching** to refine displayed results.  
+
+5. **Test Stats Column**  
+   - This column includes a **tooltip** for each status, displaying the corresponding **total count** when hovered over.  
+
+6. **Actions Column**  
+   - A **star icon** in this column serves as a link, redirecting users to the **Star Dashboard** for the selected **Launch ID** upon clicking.  
+   - Another column provides a link that navigates users to the **FA Summary Report** for further details.  
+
+These features ensure an intuitive and efficient experience while analyzing debug data.
