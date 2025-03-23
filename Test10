@@ -1,0 +1,117 @@
+const express = require('express');
+const multer = require('multer');
+const axios = require('axios');
+const cors = require('cors');
+const FormData = require('form-data');
+
+const app = express();
+const port = 3000;
+
+// Enable CORS
+app.use(cors());
+
+// Multer Configuration for File Upload (Store in Memory)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+// API Endpoint to Handle File Upload and Forward to .NET
+app.post('/upload', upload.single('file'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        const uniqueRef = req.body.UniqueRef; // Get UniqueRef from request
+        const fileBuffer = req.file.buffer; // Get file as binary buffer
+        const fileName = req.file.originalname; // Get File Name
+
+        // Prepare FormData
+        const formData = new FormData();
+        formData.append('UniqueRef', uniqueRef);
+        formData.append('file', fileBuffer, fileName); // Send file as binary
+
+        // Call .NET API
+        const dotNetApiUrl = 'https://your-dotnet-api.com/upload'; // Replace with actual .NET API URL
+        const response = await axios.post(dotNetApiUrl, formData, {
+            headers: {
+                ...formData.getHeaders(), // Set correct multipart headers
+                'Accept': 'application/json'
+            }
+        });
+
+        return res.status(200).json({ message: 'File uploaded successfully', data: response.data });
+    } catch (error) {
+        console.error('Upload Error:', error);
+        return res.status(500).json({ message: 'File upload failed', error: error.message });
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Node.js Server Running on http://localhost:${port}`);
+});
+====================================
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FileUploadService {
+  private nodeApiUrl = 'http://localhost:3000/upload'; // Replace with actual Node.js API URL
+
+  constructor(private http: HttpClient) {}
+
+  uploadFile(uniqueRef: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('UniqueRef', uniqueRef); // Add UniqueRef
+    formData.append('file', file); // Add File
+
+    return this.http.post(this.nodeApiUrl, formData, {
+      headers: new HttpHeaders({ 'Accept': 'application/json' })
+    });
+  }
+}
+==============================================
+
+import { Component } from '@angular/core';
+import { FileUploadService } from '../services/file-upload.service';
+
+@Component({
+  selector: 'app-file-upload',
+  templateUrl: './file-upload.component.html',
+  styleUrls: ['./file-upload.component.css']
+})
+export class FileUploadComponent {
+  selectedFile: File | null = null;
+  uniqueRef: string = '12345ABC'; // Example UniqueRef
+
+  constructor(private fileUploadService: FileUploadService) {}
+
+  onFileSelected(event: any) {
+    if (event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+    }
+  }
+
+  uploadFile() {
+    if (!this.selectedFile) {
+      alert('Please select a file.');
+      return;
+    }
+
+    this.fileUploadService.uploadFile(this.uniqueRef, this.selectedFile).subscribe({
+      next: (response) => {
+        console.log('File uploaded successfully', response);
+        alert('File uploaded successfully!');
+      },
+      error: (error) => {
+        console.error('Upload error', error);
+        alert('Upload failed!');
+      }
+    });
+  }
+}
+
+===========================================
+
