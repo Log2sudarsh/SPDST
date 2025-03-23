@@ -1,95 +1,83 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { DebugViewComponent } from './debug-view.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { MatSelectModule } from '@angular/material/select';
-import { DxDataGridModule } from 'devextreme-angular';
-import { DebugService } from '../services/debug.service'; // Your API service
-import { of } from 'rxjs';
-import { ProjectMetaData, dbgList } from '../models/debug.models'; // Your models
+import { Component } from '@angular/core';
+import { UploadService } from '../services/upload.service';
 
-describe('DebugViewComponent', () => {
-  let component: DebugViewComponent;
-  let fixture: ComponentFixture<DebugViewComponent>;
-  let debugService: DebugService;
+@Component({
+  selector: 'app-upload',
+  templateUrl: './upload.component.html',
+  styleUrls: ['./upload.component.css']
+})
+export class UploadComponent {
+  selectedFile: Blob | null = null; // Store converted file as Blob
+  fileName: string = '';
+  uniqueRef: string = '12345'; // Example UniqueRef (Replace dynamically)
 
-  const mockProjectList: ProjectMetaData[] = [
-    { projectName: 'Project A', autId: 1, url: 'http://example.com', sourceType: 'API', tstRef: '1234' },
-    { projectName: 'Project B', autId: 2, url: 'http://example.com', sourceType: 'API', tstRef: '5678' },
-  ];
+  constructor(private uploadService: UploadService) {}
 
-  const mockDebugList: dbgList[] = [
-    { Launchid: 101, TstRefNo: 1234, FirmwareNm: 'v1.0', Loc: 'US', count1: 10, count2: 20 },
-    { Launchid: 102, TstRefNo: 5678, FirmwareNm: 'v1.1', Loc: 'UK', count1: 15, count2: 25 },
-  ];
+  // Convert Base64 to Blob
+  private base64ToBlob(base64: string, mimeType: string): Blob {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mimeType });
+  }
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [DebugViewComponent, HttpClientTestingModule, MatSelectModule, DxDataGridModule],
-      providers: [
-        DebugService, // Mock service
-        provideHttpClient(),
-      ],
-    }).compileComponents();
+  // Handle File Selection
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-    fixture = TestBed.createComponent(DebugViewComponent);
-    component = fixture.componentInstance;
-    debugService = TestBed.inject(DebugService);
-  });
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
+    reader.onload = () => {
+      const base64String = (reader.result as string).split(',')[1]; // Remove "data:<type>;base64,"
+      this.selectedFile = this.base64ToBlob(base64String, file.type);
+      this.fileName = file.name;
+      console.log('File selected:', this.fileName);
+    };
+  }
 
-  it('should load project list on init', () => {
-    jest.spyOn(debugService, 'getProjectList').mockReturnValue(of(mockProjectList));
+  // Upload File (Triggered by Upload Button)
+  uploadFile() {
+    if (!this.selectedFile) {
+      console.error('No file selected.');
+      return;
+    }
 
-    component.ngOnInit();
+    this.uploadService.uploadFile(this.selectedFile, this.fileName, this.uniqueRef)
+      .subscribe(response => {
+        console.log('Upload successful', response);
+      }, error => {
+        console.error('Upload failed', error);
+      });
+  }
+}
+=========================================
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-    expect(debugService.getProjectList).toHaveBeenCalled();
-    expect(component.projectList.value).toEqual(mockProjectList);
-  });
+@Injectable({
+  providedIn: 'root'
+})
+export class UploadService {
+  private apiUrl = 'http://localhost:3000/upload'; // Node.js API URL
 
-  it('should update debug list when a project is selected', () => {
-    jest.spyOn(debugService, 'fetchDbgList').mockReturnValue(of(mockDebugList));
+  constructor(private http: HttpClient) {}
 
-    component.selectProject(mockProjectList[0]); // Selecting "Project A"
+  // Upload File (Blob)
+  uploadFile(fileBlob: Blob, fileName: string, uniqueRef: string) {
+    const formData = new FormData();
+    formData.append('file', fileBlob, fileName);
+    formData.append('uniqueRef', uniqueRef);
 
-    expect(debugService.fetchDbgList).toHaveBeenCalledWith(mockProjectList[0]);
-    expect(component.debugViewList.value).toEqual(mockDebugList);
-  });
-
-  it('should bind project metadata to material dropdown', () => {
-    component.projectList.set(mockProjectList);
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement;
-    const dropdownOptions = compiled.querySelectorAll('mat-option');
-
-    expect(dropdownOptions.length).toBe(mockProjectList.length);
-    expect(dropdownOptions[0].textContent).toContain('Project A');
-    expect(dropdownOptions[1].textContent).toContain('Project B');
-  });
-
-  it('should bind debug data to DevExtreme Data Grid', () => {
-    component.debugViewList.set(mockDebugList);
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement;
-    const gridRows = compiled.querySelectorAll('.dx-row');
-
-    expect(gridRows.length).toBe(mockDebugList.length);
-    expect(gridRows[0].textContent).toContain('v1.0');
-    expect(gridRows[1].textContent).toContain('v1.1');
-  });
-
-  it('should handle empty debug list gracefully', () => {
-    jest.spyOn(debugService, 'fetchDbgList').mockReturnValue(of([]));
-
-    component.selectProject(mockProjectList[0]);
-
-    expect(debugService.fetchDbgList).toHaveBeenCalledWith(mockProjectList[0]);
-    expect(component.debugViewList.value).toEqual([]);
-  });
-
-});
+    return this.http.post(this.apiUrl, formData, {
+      headers: new HttpHeaders({ 'Accept': 'application/json' }),
+      reportProgress: true,
+      observe: 'events'
+    });
+  }
+}
+================================
