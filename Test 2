@@ -79,5 +79,108 @@ export class UploadService {
       observe: 'events'
     });
   }
+
++++++++++++
+<div class="container">
+  <!-- Top Right Links -->
+  <div class="top-right">
+    <a href="javascript:void(0)" (click)="toggleWriteArticle()">Write Article</a> |
+    <a href="javascript:void(0)" (click)="toggleUploadArticle()">Upload Article</a>
+  </div>
+
+  <div class="content">
+    <!-- Articles Grid -->
+    <div class="articles-grid" [class.full-width]="viewMode === 'grid'" [class.half-width]="viewMode !== 'grid'">
+      <h2>Articles</h2>
+      <div *ngFor="let article of articles" class="article-card">
+        <h3>{{ article.title }}</h3>
+        <p>{{ article.content }}</p>
+      </div>
+    </div>
+
+    <!-- Write Article Section -->
+    <div class="write-article half-width" *ngIf="viewMode === 'write'">
+      <h2>Write an Article</h2>
+      <textarea [(ngModel)]="newArticleContent" rows="5" placeholder="Write your article here..."></textarea>
+      <div>
+        <button (click)="submitArticle()">Submit</button>
+        <button (click)="cancel()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Upload Article Section -->
+    <div class="upload-article half-width" *ngIf="viewMode === 'upload'">
+      <h2>Upload an Article</h2>
+      <input type="file" (change)="onFileSelected($event)" />
+      <div>
+        <button (click)="uploadArticle()" [disabled]="!selectedFile">Upload</button>
+        <button (click)="cancel()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
++++++++++++
+.container {
+  width: 100%;
+  margin: auto;
+  padding: 20px;
+}
+
+.top-right {
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+.top-right a {
+  text-decoration: none;
+  margin-left: 10px;
+  color: blue;
+  cursor: pointer;
+}
+
+.content {
+  display: flex;
+  gap: 20px;
+}
+
+/* Default: Grid takes full width */
+.articles-grid {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 15px;
+  transition: width 0.3s ease-in-out;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.half-width {
+  width: 50%;
+}
+
+/* Sections (Hidden by default) */
+.write-article, .upload-article {
+  border: 1px solid #ddd;
+  padding: 15px;
+  display: block;
+  transition: width 0.3s ease-in-out;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 15px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+
+
+
 }
 ================================
