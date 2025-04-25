@@ -1,0 +1,45 @@
+
+
+const { createClient, createKeyValueStorage } = require('@keeper-security/secrets-manager-core');
+
+/**
+ * Fetches secrets from Keeper Secrets Manager using a base64 config string
+ * @param {string} base64Config - Base64 encoded Keeper configuration string
+ * @returns {Promise<Array>} - Array of secrets (records)
+ */
+async function fetchKeeperSecrets(base64Config) {
+  try {
+    // Decode the base64 config string
+    const configJson = Buffer.from(base64Config, 'base64').toString('utf8');
+    const storage = createKeyValueStorage(JSON.parse(configJson));
+
+    // Create Keeper client and retrieve secrets
+    const client = await createClient(storage);
+    const secrets = await client.getSecrets();
+
+    return secrets.records; // Return only the records array
+  } catch (error) {
+    console.error('Failed to fetch Keeper secrets:', error);
+    throw error; // Re-throw so calling code can handle it
+  }
+}
+
+module.exports = { fetchKeeperSecrets };
+
+
+
+
+const { fetchKeeperSecrets } = require('./keeperHelper'); // or adjust path accordingly
+
+const base64Config = 'YOUR_BASE64_STRING_HERE';
+
+(async () => {
+  const records = await fetchKeeperSecrets(base64Config);
+
+  for (const record of records) {
+    console.log('Title:', record.title);
+    for (const field of record.fields) {
+      console.log(`${field.label}: ${field.value}`);
+    }
+  }
+})();
