@@ -1,0 +1,30 @@
+
+deployment:
+
+defaultContainer:
+
+env:
+
+name: KSM_CONFIG
+
+valueFrom:
+
+secretKeyRef:
+
+key: ksm_config
+
+name: kom-config-secret
+
+args:
+
+python -u main.py
+
+command:
+
+- /bin/sh
+
+-C
+
+image:
+
+pullPolicy: Always
